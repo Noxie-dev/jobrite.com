@@ -25,7 +25,7 @@
         
         <!-- Search Form -->
         <div class="max-w-4xl mx-auto">
-            <form method="GET" action="{% url 'jobs:search_jobs' %}" class="bg-white rounded-lg p-6 shadow-lg">
+            <form method="GET" action="{% url 'jobs:search' %}" class="bg-white rounded-lg p-6 shadow-lg">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div>
                         <label for="q" class="block text-sm font-medium text-text-primary mb-2">Job Title or Keywords</label>
@@ -170,9 +170,9 @@
                             
                             <!-- Action Buttons -->
                             <div class="mt-4 lg:mt-0 lg:ml-6 flex flex-col space-y-2">
-                                <button class="bg-accent text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition-colors duration-200 font-semibold">
-                                    Apply Now
-                                </button>
+                                <a href="{% url 'jobs:job_detail' job.id %}" class="bg-accent text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition-colors duration-200 font-semibold text-center">
+                                    View & Apply
+                                </a>
                                 <button class="border border-gray-300 text-text-primary px-6 py-2 rounded-lg hover:bg-gray-50 transition-colors duration-200">
                                     Save Job
                                 </button>

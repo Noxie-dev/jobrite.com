@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Withdraw Application - JobRite.com{% endblock %}
+
+{% block content %}
+<!-- Withdraw Header -->
+<section class="bg-primary py-12">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center text-white">
+            <h1 class="text-3xl md:text-4xl font-bold mb-4">Withdraw Application</h1>
+            <p class="text-xl text-gray-200">{{ application.job.title }} at {{ application.job.company }}</p>
+        </div>
+    </div>
+</section>
+
+<!-- Withdraw Confirmation -->
+<section class="py-12">
+    <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-white rounded-lg shadow-md p-8">
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-bold text-text-primary mb-4">Are you sure?</h2>
+                <p class="text-text-secondary mb-6">
+                    You are about to withdraw your application for <strong>{{ application.job.title }}</strong> at <strong>{{ application.job.company }}</strong>.
+                </p>
+            </div>
+            
+            <!-- Application Details -->
+            <div class="bg-gray-50 rounded-lg p-6 mb-8">
+                <h3 class="font-semibold text-text-primary mb-4">Application Details</h3>
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-text-secondary">Applied:</span>
+                        <span class="text-text-primary">{{ application.applied_at|date:"M d, Y" }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-text-secondary">Status:</span>
+                        <span class="px-2 py-1 rounded-full text-xs {{ application.get_status_display_class }}">
+                            {{ application.get_status_display }}
+                        </span>
+                    </div>
+                    {% if application.cover_letter %}
+                    <div class="flex justify-between">
+                        <span class="text-text-secondary">Cover Letter:</span>
+                        <span class="text-text-primary">✓ Included</span>
+                    </div>
+                    {% endif %}
+                    {% if application.resume %}
+                    <div class="flex justify-between">
+                        <span class="text-text-secondary">Resume:</span>
+                        <span class="text-text-primary">✓ Uploaded</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Warning Message -->
+            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-8">
+                <div class="flex items-start space-x-3">
+                    <svg class="w-5 h-5 text-yellow-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                    </svg>
+                    <div>
+                        <p class="text-yellow-800 font-medium">Important Notice</p>
+                        <p class="text-yellow-700 text-sm mt-1">
+                            Once you withdraw your application, you cannot undo this action. You will need to reapply if you change your mind.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <form method="post" class="flex flex-col sm:flex-row gap-4">
+                {% csrf_token %}
+                <button 
+                    type="submit"
+                    class="bg-red-600 text-white px-8 py-3 rounded-lg hover:bg-red-700 transition-colors duration-200 font-semibold"
+                    onclick="return confirm('Are you absolutely sure you want to withdraw this application?')"
+                >
+                    Yes, Withdraw Application
+                </button>
+                <a 
+                    href="{% url 'jobs:my_applications' %}"
+                    class="border border-gray-300 text-text-primary px-8 py-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 font-semibold text-center inline-block"
+                >
+                    Cancel
+                </a>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

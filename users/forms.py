@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, PasswordResetForm, SetPasswordForm
 from .models import UserProfile
 
 class UserProfileForm(forms.ModelForm):
@@ -260,3 +260,43 @@ class OnboardingForm(forms.ModelForm):
         if commit:
             profile.save()
         return profile
+
+
+class CustomPasswordResetForm(PasswordResetForm):
+    """Custom password reset form with styling"""
+    
+    email = forms.EmailField(
+        max_length=254,
+        widget=forms.EmailInput(attrs={
+            'placeholder': 'Enter your email address',
+            'class': 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-200',
+        }),
+        help_text='We\'ll send you a link to reset your password.'
+    )
+    
+    def clean_email(self):
+        """Validate that the email exists in the system"""
+        email = self.cleaned_data.get('email')
+        if not User.objects.filter(email=email).exists():
+            raise forms.ValidationError('No account found with this email address.')
+        return email
+
+
+class CustomSetPasswordForm(SetPasswordForm):
+    """Custom set password form with styling"""
+    
+    new_password1 = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'placeholder': 'Enter your new password',
+            'class': 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-200',
+        }),
+        help_text='Your password must be at least 8 characters long and contain a mix of letters and numbers.'
+    )
+    
+    new_password2 = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'placeholder': 'Confirm your new password',
+            'class': 'w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-200',
+        }),
+        help_text='Enter the same password as before, for verification.'
+    )

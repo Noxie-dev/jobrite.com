@@ -16,32 +16,53 @@
         <div class="floating-icon" aria-hidden="true">⚡</div>
     </div>
     
-    <div class="hero-content">
-        <h1 class="hero-title">WorkWise SA</h1>
-        <p class="hero-subtitle">Connecting Mid-Level Professionals with Premium Opportunities</p>
-        <h2 class="tagline">Let us get you hired</h2>
+    <!-- Unified Hero Card -->
+    <div class="hero-unified-card">
+        <!-- Left side: Brand Identity -->
+        <div class="hero-brand-section">
+            <div class="brand-logo-container">
+                <img src="{% static 'images/main-logo.svg' %}" alt="JobRite.com" class="brand-logo">
+            </div>
+            <div class="brand-name">
+                <h1 class="brand-title">JobRite.com</h1>
+                <p class="brand-tagline">Your Career, Right Here</p>
+            </div>
+        </div>
         
-        <!-- Enhanced Search Form -->
-        <form class="search-form" id="search-form" method="GET" action="{% url 'jobs:search_jobs' %}">
-            <div class="search-box">
-                <input type="text" class="search-input" name="q" placeholder="Search jobs, companies, or skills..." aria-label="Search for jobs, companies, or skills">
-                <button type="submit" class="search-btn">Find Jobs</button>
+        <!-- Right side: Main Content -->
+        <div class="hero-main-content">
+            <!-- Primary Content -->
+            <div class="primary-content">
+                <p class="hero-subtitle">Connecting Mid-Level Professionals with Premium Opportunities</p>
+                <h2 class="hero-tagline">Let us get you hired</h2>
             </div>
-            <a href="#upload-cv" class="cta-secondary">or Upload Your CV</a>
-        </form>
-        
-        <div class="stats-container">
-            <div class="stat-item">
-                <span class="stat-number" data-target="5000">0</span>
-                <span class="stat-label">Active Jobs</span>
+            
+            <!-- Secondary Content - Search -->
+            <div class="secondary-content">
+                <form class="hero-search-form" id="search-form" method="GET" action="{% url 'jobs:search' %}">
+                    <div class="unified-search-box">
+                        <input type="text" class="unified-search-input" name="q" placeholder="Search jobs, companies, or skills..." aria-label="Search for jobs, companies, or skills">
+                        <button type="submit" class="unified-search-btn">Find Jobs</button>
+                    </div>
+                </form>
             </div>
-            <div class="stat-item">
-                <span class="stat-number" data-target="850">0</span>
-                <span class="stat-label">Companies</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number" data-target="12000">0</span>
-                <span class="stat-label">Job Seekers</span>
+            
+            <!-- Tertiary Content - Stats -->
+            <div class="tertiary-content">
+                <div class="unified-stats-container">
+                    <div class="unified-stat-item">
+                        <span class="unified-stat-number" data-target="5000">0</span>
+                        <span class="unified-stat-label">Active Jobs</span>
+                    </div>
+                    <div class="unified-stat-item">
+                        <span class="unified-stat-number" data-target="850">0</span>
+                        <span class="unified-stat-label">Companies</span>
+                    </div>
+                    <div class="unified-stat-item">
+                        <span class="unified-stat-number" data-target="12000">0</span>
+                        <span class="unified-stat-label">Job Seekers</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -61,7 +82,7 @@
         
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
             {% for category in job_categories %}
-            <a href="{% url 'jobs:search_jobs' %}?category={{ category.key }}" class="text-center group cursor-pointer block">
+            <a href="{% url 'jobs:search' %}?category={{ category.key }}" class="text-center group cursor-pointer block">
                 <div class="w-24 h-24 mx-auto mb-4 bg-gradient-to-br {% if category.key == 'call-center' %}from-blue-400 to-blue-600{% elif category.key == 'customer-care' %}from-green-400 to-green-600{% elif category.key == 'sales' %}from-purple-400 to-purple-600{% elif category.key == 'hr' %}from-red-400 to-red-600{% elif category.key == 'it' %}from-indigo-400 to-indigo-600{% elif category.key == 'logistics' %}from-teal-400 to-teal-600{% else %}from-orange-400 to-orange-600{% endif %} rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                     {% if category.key == 'call-center' %}
                     <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -146,9 +167,9 @@
                                 <span class="px-3 py-1 {% if job.category == 'it' %}bg-blue-100 text-blue-800{% elif job.category == 'logistics' %}bg-green-100 text-green-800{% else %}bg-purple-100 text-purple-800{% endif %} rounded-full text-sm">Remote Work</span>
                                 <span class="px-3 py-1 {% if job.category == 'it' %}bg-blue-100 text-blue-800{% elif job.category == 'logistics' %}bg-green-100 text-green-800{% else %}bg-purple-100 text-purple-800{% endif %} rounded-full text-sm">{{ job.salary_range }}</span>
                             </div>
-                            <button class="bg-accent text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition-colors duration-200">
-                                Apply Now
-                            </button>
+                            <a href="{% url 'jobs:job_detail' job.id %}" class="bg-accent text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition-colors duration-200 inline-block text-center">
+                                View & Apply
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -176,7 +197,7 @@
             <button class="bg-accent text-white px-8 py-3 rounded-lg hover:bg-orange-600 transition-colors duration-200 font-semibold">
                 Create Your Profile
             </button>
-            <a href="{% url 'jobs:search_jobs' %}" class="border-2 border-primary text-primary px-8 py-3 rounded-lg hover:bg-primary hover:text-white transition-colors duration-200 font-semibold inline-block">
+            <a href="{% url 'jobs:search' %}" class="border-2 border-primary text-primary px-8 py-3 rounded-lg hover:bg-primary hover:text-white transition-colors duration-200 font-semibold inline-block">
                 Browse All Jobs
             </a>
         </div>
@@ -186,166 +207,268 @@
 
 {% block extra_js %}
 <script>
-/* Enhanced Hero Section JavaScript - Encapsulated in IIFE */
+/* Enhanced Hero Section JavaScript with Advanced Particle System */
 (function() {
-    document.addEventListener('DOMContentLoaded', () => {
-        // --- Configuration ---
-        const jobTerms = ['Customer Care', 'Call Center', 'Help Desk', 'Client Support', 'Service Agent',
-            'Customer Success', 'Technical Support', 'Phone Support', 'Live Chat Agent',
-            'Sales Agent', 'Account Manager', 'Business Development', 'Sales Rep', 'Lead Generation', 
-            'Territory Manager', 'Inside Sales', 'B2B Sales',
-            'Receptionist', 'Office Manager', 'Administrative Assistant', 'Data Entry',
-            'Office Coordinator', 'Executive Assistant', 'Front Desk', 'Scheduling',
-            'HR Specialist', 'Recruiter', 'Talent Acquisition', 'HR Coordinator',
-            'People Operations', 'Benefits Admin', 'HR Generalist', 'Training Coordinator',
-            'IT Technician', 'Help Desk Tech', 'Network Admin', 'System Admin',
-            'Tech Support', 'IT Support', 'Desktop Support', 'Field Technician',
-            'Logistics Coordinator', 'Supply Chain', 'Warehouse Supervisor', 'Operations',
-            'Inventory Manager', 'Dispatch', 'Fleet Coordinator', 'Shipping Clerk',
-            'Remote Work', 'Work From Home', 'Virtual Assistant', 'Online Jobs',
-            'Flexible Hours', 'Digital Nomad', 'Remote Team', 'Hybrid Work',
-            'Career Growth', 'Professional', 'Opportunity', 'Team Lead', 'Supervisor',
-            'Coordinator', 'Specialist', 'Analyst', 'Associate', 'Executive'];
+    'use strict';
+    
+    // Industry-specific job terms for particles
+    const jobTerms = [
+        // Customer Service & Support
+        'Customer Care', 'Call Center', 'Help Desk', 'Client Support', 'Service Agent',
+        'Customer Success', 'Technical Support', 'Phone Support', 'Live Chat Agent',
         
-        const highlightTerms = ['Remote Work', 'Career Growth', 'Customer Care', 'Sales Agent', 'IT Technician', 'HR Specialist', 'Logistics', 'Work From Home'];
-        const PARTICLE_CREATION_INTERVAL = 500; // ms
-        const MOUSE_INTERACTION_RADIUS = 100; // pixels
+        // Sales & Business
+        'Sales Agent', 'Account Manager', 'Business Development', 'Sales Rep', 
+        'Lead Generation', 'Territory Manager', 'Inside Sales', 'B2B Sales',
         
-        // --- DOM Elements ---
+        // Administrative & Office
+        'Receptionist', 'Office Manager', 'Administrative Assistant', 'Data Entry',
+        'Office Coordinator', 'Executive Assistant', 'Front Desk', 'Scheduling',
+        
+        // Human Resources
+        'HR Specialist', 'Recruiter', 'Talent Acquisition', 'HR Coordinator',
+        'People Operations', 'Benefits Admin', 'HR Generalist', 'Training Coordinator',
+        
+        // IT & Technical
+        'IT Technician', 'Help Desk Tech', 'Network Admin', 'System Admin',
+        'Tech Support', 'IT Support', 'Desktop Support', 'Field Technician',
+        
+        // Logistics & Operations
+        'Logistics Coordinator', 'Supply Chain', 'Warehouse Supervisor', 'Operations',
+        'Inventory Manager', 'Dispatch', 'Fleet Coordinator', 'Shipping Clerk',
+        
+        // Remote Work Terms
+        'Remote Work', 'Work From Home', 'Virtual Assistant', 'Online Jobs',
+        'Flexible Hours', 'Digital Nomad', 'Remote Team', 'Hybrid Work',
+        
+        // General Professional Terms
+        'Career Growth', 'Professional', 'Opportunity', 'Team Lead', 'Supervisor',
+        'Coordinator', 'Specialist', 'Analyst', 'Associate', 'Executive'
+    ];
+
+    const highlightTerms = [
+        'Remote Work', 'Career Growth', 'Customer Care', 'Sales Agent', 
+        'IT Technician', 'HR Specialist', 'Logistics', 'Work From Home'
+    ];
+
+    // Mouse interaction variables
+    let mouseX = 0;
+    let mouseY = 0;
+    let particles = [];
+
+    // Enhanced particle creation with mouse interaction
+    function createParticle() {
         const particlesContainer = document.getElementById('particles-container');
+        if (!particlesContainer) return;
+        
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        
+        const term = jobTerms[Math.floor(Math.random() * jobTerms.length)];
+        particle.textContent = term;
+        
+        // Highlight certain important terms
+        if (highlightTerms.includes(term)) {
+            particle.classList.add('highlight');
+        }
+        
+        // Random starting position - start from bottom
+        const startX = Math.random() * 100;
+        const startY = 100; // Start from bottom
+        
+        particle.style.left = startX + 'vw';
+        particle.style.top = startY + 'vh';
+        particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+        particle.style.animationDelay = Math.random() * 2 + 's';
+        
+        // Store particle data for mouse interaction
+        const particleData = {
+            element: particle,
+            baseX: startX,
+            baseY: startY,
+            currentX: startX,
+            currentY: startY,
+            originalAnimation: true,
+            createdTime: Date.now()
+        };
+        
+        particles.push(particleData);
+        particlesContainer.appendChild(particle);
+        
+        // Remove particle after animation
+        setTimeout(() => {
+            if (particle.parentNode) {
+                particle.parentNode.removeChild(particle);
+                // Remove from particles array
+                const index = particles.findIndex(p => p.element === particle);
+                if (index > -1) {
+                    particles.splice(index, 1);
+                }
+            }
+        }, 25000);
+    }
+
+    // Mouse tracking for particle interaction
+    function updateMousePosition(e) {
+        mouseX = (e.clientX / window.innerWidth) * 100; // Convert to vw
+        mouseY = (e.clientY / window.innerHeight) * 100; // Convert to vh
+        updateParticleInteractions();
+    }
+
+    // Update particle positions based on mouse proximity
+    function updateParticleInteractions() {
+        particles.forEach(particleData => {
+            const particle = particleData.element;
+            if (!particle.parentNode) return;
+
+            // Get current particle position
+            const rect = particle.getBoundingClientRect();
+            const particleX = (rect.left + rect.width / 2) / window.innerWidth * 100;
+            const particleY = (rect.top + rect.height / 2) / window.innerHeight * 100;
+
+            // Calculate distance from mouse
+            const distance = Math.sqrt(
+                Math.pow(mouseX - particleX, 2) + Math.pow(mouseY - particleY, 2)
+            );
+
+            const attractionRadius = 15; // Radius in vw/vh units
+            const maxAttraction = 8; // Maximum attraction distance
+
+            if (distance < attractionRadius) {
+                // Calculate attraction force
+                const force = (attractionRadius - distance) / attractionRadius;
+                const attractionStrength = force * maxAttraction;
+
+                // Calculate direction towards mouse
+                const directionX = (mouseX - particleX) / distance || 0;
+                const directionY = (mouseY - particleY) / distance || 0;
+
+                // Apply attraction
+                const newX = particleX + (directionX * attractionStrength * 0.5);
+                const newY = particleY + (directionY * attractionStrength * 0.5);
+
+                // Smooth transition to attracted position
+                particle.style.left = newX + 'vw';
+                particle.style.top = newY + 'vh';
+                particle.style.animationPlayState = 'paused';
+                particle.classList.add('mouse-attracted');
+
+                particleData.currentX = newX;
+                particleData.currentY = newY;
+                particleData.originalAnimation = false;
+            } else if (!particleData.originalAnimation) {
+                // Gradually return to original animation when mouse moves away
+                particle.style.animationPlayState = 'running';
+                particle.classList.remove('mouse-attracted');
+                particleData.originalAnimation = true;
+            }
+        });
+    }
+
+    // Search functionality
+    function performSearch(e) {
+        const searchInput = document.querySelector('.unified-search-input');
+        const searchTerm = searchInput.value.trim();
+        if (!searchTerm) {
+            e.preventDefault();
+            searchInput.focus();
+            return false;
+        }
+        // Let the form submit normally to Django
+    }
+    
+    // Animated Stat Counter
+    function animateStatNumbers() {
+        const statNumbers = document.querySelectorAll('.unified-stat-number');
+        statNumbers.forEach(counter => {
+            const target = +counter.getAttribute('data-target');
+            const duration = 2000; // 2 seconds
+            const stepTime = Math.abs(Math.floor(duration / target));
+            let current = 0;
+            
+            const timer = setInterval(() => {
+                current += Math.ceil(target/100);
+                if (current >= target) {
+                    clearInterval(timer);
+                    counter.textContent = target.toLocaleString() + '+';
+                    return;
+                }
+                counter.textContent = current.toLocaleString();
+            }, stepTime < 10 ? 10 : stepTime);
+        });
+    }
+    
+    // Typewriter Effect
+    function typeWriter(element, text, speed = 80) {
+        let i = 0;
+        element.textContent = '';
+        function type() {
+            if (i < text.length) {
+                element.textContent += text.charAt(i);
+                i++;
+                setTimeout(type, speed);
+            }
+        }
+        type();
+    }
+
+    // DOM Content Loaded Event
+    document.addEventListener('DOMContentLoaded', function() {
         const searchForm = document.getElementById('search-form');
-        const searchInput = document.querySelector('.search-input');
-        const statNumbers = document.querySelectorAll('.stat-number');
-        const tagline = document.querySelector('.tagline');
+        const tagline = document.querySelector('.hero-tagline');
         const floatingIcons = document.querySelectorAll('.floating-icon');
         
-        // --- Particle System ---
-        function createParticle() {
-            if (!particlesContainer) return;
-            
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-            const term = jobTerms[Math.floor(Math.random() * jobTerms.length)];
-            particle.textContent = term;
-            
-            if (highlightTerms.includes(term)) {
-                particle.classList.add('highlight');
-            }
-            
-            particle.style.left = Math.random() * 100 + 'vw';
-            particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
-            particle.style.animationDelay = Math.random() * 5 + 's';
-            particle.style.setProperty('--drift', `${(Math.random() - 0.5) * 200}px`);
-            
-            particlesContainer.appendChild(particle);
-            setTimeout(() => particle.remove(), 20000);
+        // Start particle system
+        function startParticleSystem() {
+            setInterval(createParticle, 600);
         }
         
-        // Mouse interaction
-        function handleMouseMove(e) {
-            const allParticles = document.querySelectorAll('.particle');
-            allParticles.forEach(particle => {
-                const rect = particle.getBoundingClientRect();
-                const distance = Math.hypot(e.clientX - rect.left, e.clientY - rect.top);
-                
-                if (distance < MOUSE_INTERACTION_RADIUS) {
-                    particle.classList.add('mouse-attracted');
-                } else {
-                    particle.classList.remove('mouse-attracted');
-                }
-            });
+        // Add mouse tracking for particle interactions
+        document.addEventListener('mousemove', (e) => {
+            updateMousePosition(e);
             
-            // Parallax for floating icons
-            const x = (e.clientX / window.innerWidth - 0.5) * 40;
-            const y = (e.clientY / window.innerHeight - 0.5) * 40;
+            // Enhanced parallax effect for floating icons
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
             
             floatingIcons.forEach((icon, index) => {
-                const speed = (index + 1) * 0.2;
-                icon.style.transform = `translateX(${x * speed}px) translateY(${y * speed}px)`;
+                const speed = (index + 1) * 0.8;
+                icon.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
             });
-        }
-        
-        // Throttling function for performance
-        function throttle(func, limit) {
-            let inThrottle;
-            return function() {
-                const args = arguments;
-                const context = this;
-                if (!inThrottle) {
-                    func.apply(context, args);
-                    inThrottle = true;
-                    setTimeout(() => inThrottle = false, limit);
+        });
+
+        // Add mouse leave event to reset particles
+        document.addEventListener('mouseleave', () => {
+            particles.forEach(particleData => {
+                if (particleData.element.parentNode) {
+                    particleData.element.style.animationPlayState = 'running';
+                    particleData.element.classList.remove('mouse-attracted');
+                    particleData.originalAnimation = true;
                 }
-            }
-        }
-        
-        // Search functionality
-        function performSearch(e) {
-            const searchTerm = searchInput.value.trim();
-            if (!searchTerm) {
-                e.preventDefault();
-                searchInput.focus();
-                return false;
-            }
-            // Let the form submit normally to Django
-        }
-        
-        // Animated Stat Counter
-        function animateStatNumbers() {
-            statNumbers.forEach(counter => {
-                const target = +counter.getAttribute('data-target');
-                const duration = 2000; // 2 seconds
-                const stepTime = Math.abs(Math.floor(duration / target));
-                let current = 0;
-                
-                const timer = setInterval(() => {
-                    current += Math.ceil(target/100);
-                    if (current >= target) {
-                        clearInterval(timer);
-                        counter.textContent = target.toLocaleString() + '+';
-                        return;
-                    }
-                    counter.textContent = current.toLocaleString();
-                }, stepTime < 10 ? 10 : stepTime);
             });
-        }
-        
-        // Typewriter Effect
-        function typeWriter(element, text, speed = 80) {
-            let i = 0;
-            element.textContent = '';
-            function type() {
-                if (i < text.length) {
-                    element.textContent += text.charAt(i);
-                    i++;
-                    setTimeout(type, speed);
-                }
-            }
-            type();
-        }
-        
-        // --- Initializations ---
-        // Start particle system
-        for (let i = 0; i < 20; i++) { 
-            createParticle(); 
-        }
-        setInterval(createParticle, PARTICLE_CREATION_INTERVAL);
-        
-        // Add throttled event listener
-        document.addEventListener('mousemove', throttle(handleMouseMove, 100));
+        });
         
         // Initialize search
         if (searchForm) {
             searchForm.addEventListener('submit', performSearch);
         }
         
+        // Start the particle system when page loads
+        startParticleSystem();
+        
+        // Create some initial particles
+        for (let i = 0; i < 8; i++) {
+            setTimeout(() => createParticle(), i * 150);
+        }
+        
         // Start animations after initial page animations
         setTimeout(() => {
             animateStatNumbers();
             if (tagline && tagline.textContent) {
-                typeWriter(tagline, tagline.textContent);
+                const originalText = tagline.textContent;
+                typeWriter(tagline, originalText, 80);
             }
-        }, 1800);
+        }, 2000);
     });
 })();
 </script>

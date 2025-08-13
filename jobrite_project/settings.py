@@ -147,3 +147,26 @@ CSRF_COOKIE_SECURE = False  # Set to True in production with HTTPS
 SESSION_COOKIE_SECURE = False  # Set to True in production with HTTPS
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# Email Configuration
+# For development, we'll use console backend to print emails to console
+# In production, configure with actual SMTP settings
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# For production, use these settings instead:
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'  # or your SMTP server
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = 'your-email@gmail.com'
+# EMAIL_HOST_PASSWORD = 'your-app-password'
+
+# Default from email
+DEFAULT_FROM_EMAIL = 'JobRite Team <noreply@jobrite.com>'
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
+
+# Site URL for email templates
+SITE_URL = 'http://localhost:8000'  # Change this in production
+
+# Password reset timeout (in seconds) - 24 hours
+PASSWORD_RESET_TIMEOUT = 86400

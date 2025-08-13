@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Applications - JobRite.com{% endblock %}
+
+{% block content %}
+<!-- Applications Header -->
+<section class="bg-primary py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center text-white">
+            <h1 class="text-3xl md:text-4xl font-bold mb-4">My Applications</h1>
+            <p class="text-xl text-gray-200">Track your job application status</p>
+        </div>
+    </div>
+</section>
+
+<!-- Applications List -->
+<section class="py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {% if applications %}
+            <!-- Applications Summary -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-text-primary">{{ applications.count }}</div>
+                        <div class="text-text-secondary">Total Applications</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-yellow-600">{{ applications|length }}</div>
+                        <div class="text-text-secondary">Pending Review</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-blue-600">0</div>
+                        <div class="text-text-secondary">Under Review</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-green-600">0</div>
+                        <div class="text-text-secondary">Interviews</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Applications List -->
+            <div class="space-y-6">
+                {% for application in applications %}
+                <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <div class="p-6">
+                        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+                            <div class="flex-1">
+                                <div class="flex items-start space-x-4">
+                                    <div class="w-12 h-12 bg-gradient-to-br {% if application.job.category == 'call-center' %}from-blue-400 to-blue-600{% elif application.job.category == 'customer-care' %}from-green-400 to-green-600{% elif application.job.category == 'sales' %}from-purple-400 to-purple-600{% elif application.job.category == 'hr' %}from-red-400 to-red-600{% elif application.job.category == 'it' %}from-indigo-400 to-indigo-600{% elif application.job.category == 'logistics' %}from-teal-400 to-teal-600{% else %}from-orange-400 to-orange-600{% endif %} rounded-lg flex items-center justify-center flex-shrink-0">
+                                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h3 class="text-xl font-bold text-text-primary mb-2">
+                                            <a href="{% url 'jobs:job_detail' application.job.id %}" class="hover:text-accent transition-colors duration-200">
+                                                {{ application.job.title }}
+                                            </a>
+                                        </h3>
+                                        <p class="text-accent font-semibold mb-2">{{ application.job.company }}</p>
+                                        
+                                        <!-- Application Details -->
+                                        <div class="flex flex-wrap gap-2 mb-3">
+                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm {{ application.get_status_display_class }}">
+                                                {{ application.get_status_display }}
+                                            </span>
+                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-gray-100 text-gray-800">
+                                                📍 {{ application.job.location }}
+                                            </span>
+                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800">
+                                                {{ application.job.get_job_type_display }}
+                                            </span>
+                                        </div>
+                                        
+                                        <div class="text-sm text-text-secondary space-y-1">
+                                            <p>Applied {{ application.applied_at|timesince }} ago</p>
+                                            {% if application.cover_letter %}
+                                            <p>✓ Cover letter included</p>
+                                            {% endif %}
+                                            {% if application.resume %}
+                                            <p>✓ Resume uploaded</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Action Buttons -->
+                            <div class="mt-4 lg:mt-0 lg:ml-6 flex flex-col space-y-2">
+                                <a 
+                                    href="{% url 'jobs:job_detail' application.job.id %}"
+                                    class="bg-accent text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition-colors duration-200 font-semibold text-center"
+                                >
+                                    View Job
+                                </a>
+                                {% if application.status not in 'accepted,rejected' %}
+                                <a 
+                                    href="{% url 'jobs:withdraw_application' application.id %}"
+                                    class="border border-red-300 text-red-600 px-6 py-2 rounded-lg hover:bg-red-50 transition-colors duration-200 font-semibold text-center"
+                                >
+                                    Withdraw
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <!-- Application Timeline (if status is not pending) -->
+                        {% if application.status != 'pending' %}
+                        <div class="mt-6 pt-6 border-t border-gray-200">
+                            <h4 class="text-sm font-semibold text-text-primary mb-3">Application Timeline</h4>
+                            <div class="flex items-center space-x-4 text-sm">
+                                <div class="flex items-center space-x-2">
+                                    <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                                    <span class="text-text-secondary">Applied {{ application.applied_at|date:"M d, Y" }}</span>
+                                </div>
+                                {% if application.status != 'pending' %}
+                                <div class="flex items-center space-x-2">
+                                    <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
+                                    <span class="text-text-secondary">{{ application.get_status_display }} {{ application.updated_at|date:"M d, Y" }}</span>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination (placeholder for future implementation) -->
+            <div class="mt-12 text-center">
+                <div class="inline-flex space-x-2">
+                    <button class="px-4 py-2 border border-gray-300 rounded-lg text-text-secondary hover:bg-gray-50 transition-colors duration-200">
+                        Previous
+                    </button>
+                    <button class="px-4 py-2 bg-accent text-white rounded-lg">
+                        1
+                    </button>
+                    <button class="px-4 py-2 border border-gray-300 rounded-lg text-text-primary hover:bg-gray-50 transition-colors duration-200">
+                        Next
+                    </button>
+                </div>
+            </div>
+        {% else %}
+            <!-- No Applications -->
+            <div class="text-center py-16">
+                <div class="max-w-md mx-auto">
+                    <svg class="w-24 h-24 text-gray-400 mx-auto mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <h3 class="text-2xl font-bold text-text-primary mb-4">No Applications Yet</h3>
+                    <p class="text-text-secondary mb-6">
+                        You haven't applied for any jobs yet. Start browsing and find your perfect opportunity!
+                    </p>
+                    <a href="{% url 'jobs:search' %}" class="inline-block bg-accent text-white px-6 py-3 rounded-lg hover:bg-orange-600 transition-colors duration-200 font-semibold">
+                        Browse Jobs
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
