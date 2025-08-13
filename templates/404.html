@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Page Not Found - JobRite.com{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-secondary">
+    <div class="max-w-md w-full mx-auto text-center px-4">
+        <!-- Error Icon -->
+        <div class="mb-8">
+            <svg class="mx-auto h-24 w-24 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.137 0-4.146-.832-5.657-2.343m0 0A7.953 7.953 0 014 9c0-4.418 3.582-8 8-8s8 3.582 8 8c0 2.21-.896 4.21-2.343 5.657m0 0A7.962 7.962 0 0115 12.01"/>
+            </svg>
+        </div>
+        
+        <!-- Error Message -->
+        <h1 class="text-6xl font-bold text-primary mb-4">404</h1>
+        <h2 class="text-2xl font-semibold text-primary mb-4">Page Not Found</h2>
+        <p class="text-text-secondary mb-8 leading-relaxed">
+            Sorry, we couldn't find the page you're looking for. 
+            The job opportunity you're seeking might have been filled, 
+            or the page may have been moved.
+        </p>
+        
+        <!-- Action Buttons -->
+        <div class="space-y-4">
+            <a href="{% url 'jobs:home' %}" 
+               class="inline-block w-full bg-accent text-white px-6 py-3 rounded-lg font-semibold hover:bg-orange-600 transition-colors duration-200">
+                Back to Home
+            </a>
+            <a href="{% url 'jobs:search_jobs' %}" 
+               class="inline-block w-full bg-white text-primary border-2 border-primary px-6 py-3 rounded-lg font-semibold hover:bg-primary hover:text-white transition-colors duration-200">
+                Search Jobs
+            </a>
+        </div>
+        
+        <!-- Helpful Links -->
+        <div class="mt-8 pt-8 border-t border-gray-300">
+            <p class="text-sm text-text-secondary mb-4">Need help? Try these popular pages:</p>
+            <div class="flex flex-wrap justify-center gap-4 text-sm">
+                <a href="{% url 'jobs:faq' %}" class="text-accent hover:text-orange-600 transition-colors duration-200">FAQ</a>
+                <a href="{% url 'jobs:salary_calculator' %}" class="text-accent hover:text-orange-600 transition-colors duration-200">Salary Calculator</a>
+                <a href="{% url 'jobs:cv_creator' %}" class="text-accent hover:text-orange-600 transition-colors duration-200">CV Creator</a>
+                <a href="{% url 'blog:blog_list' %}" class="text-accent hover:text-orange-600 transition-colors duration-200">Career Advice</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,639 @@
+/* JobRite.com Main Styles */
+
+/* Custom CSS Variables for Brand Colors */
+:root {
+    --primary-color: #233D4D;
+    --secondary-color: #F3EFF5;
+    --accent-color: #FE7F2D;
+    --text-primary: #233D4D;
+    --text-secondary: #6B7280;
+    --white: #FFFFFF;
+}
+
+/* Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Work Sans', sans-serif;
+    line-height: 1.6;
+    color: var(--text-primary);
+    background-color: var(--white);
+}
+
+/* Particle Animation Styles */
+.particles-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.particle {
+    position: absolute;
+    background-color: var(--accent-color);
+    border-radius: 50%;
+    opacity: 0.6;
+    animation: float 6s ease-in-out infinite;
+}
+
+.particle:nth-child(odd) {
+    animation-delay: -2s;
+    animation-duration: 8s;
+}
+
+.particle:nth-child(even) {
+    animation-delay: -4s;
+    animation-duration: 10s;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px) translateX(0px) rotate(0deg);
+        opacity: 0.6;
+    }
+    25% {
+        transform: translateY(-20px) translateX(10px) rotate(90deg);
+        opacity: 0.8;
+    }
+    50% {
+        transform: translateY(-40px) translateX(-10px) rotate(180deg);
+        opacity: 0.4;
+    }
+    75% {
+        transform: translateY(-20px) translateX(15px) rotate(270deg);
+        opacity: 0.7;
+    }
+}
+
+/* Hero Section Styles */
+.hero-section {
+    position: relative;
+    background: linear-gradient(135deg, var(--primary-color) 0%, #1a2f3a 100%);
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    color: white;
+    max-width: 800px;
+    padding: 2rem;
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+}
+
+.hero-subtitle {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+    font-weight: 400;
+}
+
+/* Search Bar Styles */
+.search-container {
+    background: white;
+    border-radius: 50px;
+    padding: 0.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    background: transparent;
+    color: var(--text-primary);
+}
+
+.search-input::placeholder {
+    color: var(--text-secondary);
+}
+
+.search-button {
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 1rem 2rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+.search-button:hover {
+    background: #e56b1f;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(254, 127, 45, 0.3);
+}
+
+/* Job Categories Styles */
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+@media (min-width: 768px) {
+    .category-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .category-grid {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+.category-item {
+    text-align: center;
+    padding: 2rem 1rem;
+    border-radius: 1rem;
+    background: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.category-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.category-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin: 0 auto 1rem;
+    background: var(--secondary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: var(--accent-color);
+    transition: all 0.3s ease;
+}
+
+.category-item:hover .category-image {
+    background: var(--accent-color);
+    color: white;
+    transform: scale(1.1);
+}
+
+.category-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.category-description {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+/* Job Cards Styles */
+.job-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    border: 1px solid #f1f5f9;
+}
+
+.job-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.job-card-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.job-card-image {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--secondary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+    font-size: 1.5rem;
+    color: var(--accent-color);
+}
+
+.job-card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.job-card-company {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.job-card-description {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.job-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid #f1f5f9;
+}
+
+.job-card-location {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.job-card-apply {
+    background: var(--accent-color);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.job-card-apply:hover {
+    background: #e56b1f;
+    transform: translateY(-1px);
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    /* Extra small devices (phones) */
+    .hero-title {
+        font-size: 2rem;
+        line-height: 1.1;
+    }
+    
+    .hero-subtitle {
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .search-container {
+        flex-direction: column;
+        border-radius: 1rem;
+        padding: 0.75rem;
+        margin: 0 1rem;
+    }
+    
+    .search-input {
+        margin-bottom: 0.75rem;
+        padding: 0.875rem 1rem;
+        font-size: 0.9rem;
+    }
+    
+    .search-button {
+        width: 100%;
+        border-radius: 0.5rem;
+        padding: 0.875rem 1.5rem;
+        font-size: 0.9rem;
+    }
+    
+    .category-grid {
+        gap: 0.75rem;
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .category-item {
+        padding: 1rem 0.75rem;
+    }
+    
+    .category-image {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+    }
+    
+    .category-title {
+        font-size: 0.95rem;
+    }
+    
+    .category-description {
+        font-size: 0.8rem;
+    }
+    
+    .job-card {
+        padding: 1.25rem;
+    }
+    
+    .job-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+    }
+    
+    .job-card-image {
+        width: 50px;
+        height: 50px;
+        margin-right: 0;
+        margin-bottom: 0.75rem;
+        font-size: 1.25rem;
+    }
+    
+    .job-card-title {
+        font-size: 1.1rem;
+    }
+    
+    .job-card-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+    
+    .job-card-apply {
+        width: 100%;
+        text-align: center;
+        padding: 0.75rem 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Small devices (tablets) */
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.1rem;
+    }
+    
+    .search-container {
+        flex-direction: column;
+        border-radius: 1rem;
+        padding: 1rem;
+    }
+    
+    .search-input {
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+    
+    .search-button {
+        width: 100%;
+        border-radius: 0.5rem;
+    }
+    
+    .category-grid {
+        gap: 1rem;
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .category-item {
+        padding: 1.5rem 1rem;
+    }
+    
+    .job-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .job-card-image {
+        margin-right: 0;
+        margin-bottom: 1rem;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    /* Medium devices (small laptops) */
+    .category-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .hero-title {
+        font-size: 3rem;
+    }
+    
+    .search-container {
+        flex-direction: row;
+        padding: 0.5rem;
+    }
+    
+    .search-input {
+        margin-bottom: 0;
+        text-align: left;
+    }
+    
+    .search-button {
+        width: auto;
+        border-radius: 50px;
+    }
+}
+
+@media (min-width: 1025px) {
+    /* Large devices (desktops) */
+    .category-grid {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+/* Touch-friendly improvements */
+@media (hover: none) and (pointer: coarse) {
+    /* Touch devices */
+    .category-item,
+    .job-card,
+    .btn,
+    button,
+    a {
+        min-height: 44px; /* Minimum touch target size */
+    }
+    
+    .category-item {
+        padding: 1.5rem 1rem;
+    }
+    
+    .job-card-apply,
+    .search-button,
+    .btn {
+        padding: 0.875rem 1.5rem;
+        font-size: 1rem;
+    }
+    
+    /* Increase spacing for better touch targets */
+    .mobile-menu a {
+        padding: 1rem 0.75rem;
+        margin: 0.25rem 0;
+    }
+}
+
+/* Landscape orientation on mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+    .hero-section {
+        min-height: 50vh;
+    }
+    
+    .hero-title {
+        font-size: 2.25rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+    }
+}
+
+/* Utility Classes */
+.section-padding {
+    padding: 4rem 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.text-gradient {
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Animation Classes */
+.fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeIn 0.6s ease forwards;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.slide-in-left {
+    opacity: 0;
+    transform: translateX(-30px);
+    animation: slideInLeft 0.6s ease forwards;
+}
+
+@keyframes slideInLeft {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.slide-in-right {
+    opacity: 0;
+    transform: translateX(30px);
+    animation: slideInRight 0.6s ease forwards;
+}
+
+@keyframes slideInRight {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Mobile-specific animations */
+.animate-slide-down {
+    animation: slideDown 0.3s ease-out forwards;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-bounce-in {
+    animation: bounceIn 0.5s ease-out forwards;
+}
+
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.3);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+    70% {
+        transform: scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Touch feedback animations */
+.touch-feedback {
+    transition: transform 0.1s ease, background-color 0.1s ease;
+}
+
+.touch-feedback:active {
+    transform: scale(0.98);
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    
+    .particle {
+        animation: none !important;
+    }
+    
+    .particles-container {
+        display: none !important;
+    }
+}

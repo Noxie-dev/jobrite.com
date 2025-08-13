@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}Salary Calculator - JobRite.com{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="text-center mb-12">
+        <h1 class="text-4xl font-bold text-primary mb-4">Salary Calculator</h1>
+        <p class="text-xl text-text-secondary">Calculate and compare salaries for different positions</p>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow-md p-8">
+        <form class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label for="job-title" class="block text-sm font-medium text-primary mb-2">Job Title</label>
+                    <input type="text" id="job-title" name="job-title" 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+                           placeholder="e.g., Customer Service Representative">
+                </div>
+                
+                <div>
+                    <label for="location" class="block text-sm font-medium text-primary mb-2">Location</label>
+                    <input type="text" id="location" name="location" 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+                           placeholder="e.g., New York, NY">
+                </div>
+                
+                <div>
+                    <label for="experience" class="block text-sm font-medium text-primary mb-2">Years of Experience</label>
+                    <select id="experience" name="experience" 
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent">
+                        <option value="">Select experience level</option>
+                        <option value="0-1">0-1 years</option>
+                        <option value="2-3">2-3 years</option>
+                        <option value="4-5">4-5 years</option>
+                        <option value="6+">6+ years</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label for="industry" class="block text-sm font-medium text-primary mb-2">Industry</label>
+                    <select id="industry" name="industry" 
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent">
+                        <option value="">Select industry</option>
+                        <option value="call-center">Call Center</option>
+                        <option value="customer-care">Customer Care</option>
+                        <option value="sales">Sales</option>
+                        <option value="hr">Human Resources</option>
+                        <option value="it">Information Technology</option>
+                        <option value="logistics">Logistics</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <button type="button" 
+                        class="bg-accent text-white px-8 py-3 rounded-lg hover:bg-orange-600 transition-colors duration-200 font-medium">
+                    Calculate Salary
+                </button>
+            </div>
+        </form>
+        
+        <div class="mt-8 p-6 bg-secondary rounded-lg">
+            <h3 class="text-lg font-semibold text-primary mb-3">Salary Estimate</h3>
+            <p class="text-text-secondary">Enter your job details above to get a personalized salary estimate based on current market data.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}Server Error - JobRite.com{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-secondary">
+    <div class="max-w-md w-full mx-auto text-center px-4">
+        <!-- Error Icon -->
+        <div class="mb-8">
+            <svg class="mx-auto h-24 w-24 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+            </svg>
+        </div>
+        
+        <!-- Error Message -->
+        <h1 class="text-6xl font-bold text-primary mb-4">500</h1>
+        <h2 class="text-2xl font-semibold text-primary mb-4">Server Error</h2>
+        <p class="text-text-secondary mb-8 leading-relaxed">
+            We're experiencing some technical difficulties right now. 
+            Our team has been notified and is working to fix the issue. 
+            Please try again in a few minutes.
+        </p>
+        
+        <!-- Action Buttons -->
+        <div class="space-y-4">
+            <button onclick="window.location.reload()" 
+                    class="inline-block w-full bg-accent text-white px-6 py-3 rounded-lg font-semibold hover:bg-orange-600 transition-colors duration-200">
+                Try Again
+            </button>
+            <a href="{% url 'jobs:home' %}" 
+               class="inline-block w-full bg-white text-primary border-2 border-primary px-6 py-3 rounded-lg font-semibold hover:bg-primary hover:text-white transition-colors duration-200">
+                Back to Home
+            </a>
+        </div>
+        
+        <!-- Support Information -->
+        <div class="mt-8 pt-8 border-t border-gray-300">
+            <p class="text-sm text-text-secondary mb-4">
+                If the problem persists, please contact our support team.
+            </p>
+            <div class="flex flex-wrap justify-center gap-4 text-sm">
+                <a href="{% url 'jobs:faq' %}" class="text-accent hover:text-orange-600 transition-colors duration-200">FAQ</a>
+                <a href="#" class="text-accent hover:text-orange-600 transition-colors duration-200">Contact Support</a>
+                <a href="{% url 'jobs:home' %}" class="text-accent hover:text-orange-600 transition-colors duration-200">Home</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

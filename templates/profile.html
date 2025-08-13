@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load profile_extras %}
+
+{% block title %}Profile - JobRite.com{% endblock %}
+
+{% block content %}
+<div class="bg-secondary min-h-screen py-8">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Profile Header -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-6 mb-6">
+            <div class="flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0 md:space-x-6">
+                <!-- Profile Picture -->
+                <div class="flex-shrink-0">
+                    {% if user.userprofile.profile_picture %}
+                        <img src="{{ user.userprofile.profile_picture.url }}" 
+                             alt="{{ user.get_full_name|default:user.username }}" 
+                             class="w-24 h-24 rounded-full object-cover border-4 border-accent">
+                    {% else %}
+                        <div class="w-24 h-24 rounded-full bg-accent flex items-center justify-center text-white text-2xl font-bold">
+                            {{ user.first_name.0|default:user.username.0|upper }}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Profile Info -->
+                <div class="flex-1">
+                    <h1 class="text-3xl font-bold text-primary mb-2">
+                        {{ user.get_full_name|default:user.username }}
+                    </h1>
+                    {% if user.userprofile.location %}
+                        <p class="text-text-secondary mb-2">
+                            <svg class="inline w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
+                            </svg>
+                            {{ user.userprofile.location }}
+                        </p>
+                    {% endif %}
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-accent text-white">
+                            {{ user.userprofile.get_experience_level_display }}
+                        </span>
+                        {% if user.email %}
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-text-primary">
+                                {{ user.email }}
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Edit Button -->
+                <div class="flex-shrink-0">
+                    <button class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-opacity-90 transition-colors duration-200">
+                        Edit Profile
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Main Content -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- About Section -->
+                <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
+                    <h2 class="text-xl font-semibold text-primary mb-4">About</h2>
+                    {% if user.userprofile.bio %}
+                        <p class="text-text-secondary leading-relaxed">{{ user.userprofile.bio }}</p>
+                    {% else %}
+                        <p class="text-text-secondary italic">No bio available. Click "Edit Profile" to add your bio.</p>
+                    {% endif %}
+                </div>
+
+                <!-- Skills Section -->
+                <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
+                    <h2 class="text-xl font-semibold text-primary mb-4">Skills</h2>
+                    {% if user.userprofile.skills %}
+                        <div class="flex flex-wrap gap-2">
+                            {% for skill in user.userprofile.skills|split:"," %}
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-secondary text-primary border border-gray-200">
+                                    {{ skill }}
+                                </span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-text-secondary italic">No skills listed. Click "Edit Profile" to add your skills.</p>
+                    {% endif %}
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
+                    <h2 class="text-xl font-semibold text-primary mb-4">Recent Activity</h2>
+                    <div class="space-y-4">
+                        <div class="flex items-start space-x-3">
+                            <div class="flex-shrink-0 w-2 h-2 bg-accent rounded-full mt-2"></div>
+                            <div>
+                                <p class="text-text-primary">Profile created</p>
+                                <p class="text-sm text-text-secondary">{{ user.userprofile.created_at|date:"F j, Y" }}</p>
+                            </div>
+                        </div>
+                        {% if user.userprofile.updated_at != user.userprofile.created_at %}
+                            <div class="flex items-start space-x-3">
+                                <div class="flex-shrink-0 w-2 h-2 bg-accent rounded-full mt-2"></div>
+                                <div>
+                                    <p class="text-text-primary">Profile updated</p>
+                                    <p class="text-sm text-text-secondary">{{ user.userprofile.updated_at|date:"F j, Y" }}</p>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="space-y-6">
+                <!-- Quick Stats -->
+                <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
+                    <h3 class="text-lg font-semibold text-primary mb-4">Profile Stats</h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-text-secondary">Member since</span>
+                            <span class="text-primary font-medium">{{ user.date_joined|date:"M Y" }}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-text-secondary">Profile views</span>
+                            <span class="text-primary font-medium">0</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-text-secondary">Applications</span>
+                            <span class="text-primary font-medium">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resume Section -->
+                <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
+                    <h3 class="text-lg font-semibold text-primary mb-4">Resume</h3>
+                    {% if user.userprofile.resume %}
+                        <div class="flex items-center space-x-3 p-3 bg-secondary rounded-lg">
+                            <svg class="w-8 h-8 text-accent" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path>
+                            </svg>
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-primary">Resume.pdf</p>
+                                <p class="text-xs text-text-secondary">Uploaded</p>
+                            </div>
+                            <a href="{{ user.userprofile.resume.url }}" 
+                               class="text-accent hover:text-orange-600 transition-colors duration-200">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                </svg>
+                            </a>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-6">
+                            <svg class="mx-auto w-12 h-12 text-gray-300 mb-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path>
+                            </svg>
+                            <p class="text-text-secondary text-sm mb-3">No resume uploaded</p>
+                            <button class="text-accent hover:text-orange-600 text-sm font-medium transition-colors duration-200">
+                                Upload Resume
+                            </button>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
+                    <h3 class="text-lg font-semibold text-primary mb-4">Quick Actions</h3>
+                    <div class="space-y-3">
+                        <a href="#" class="block w-full text-left px-4 py-2 text-primary hover:bg-secondary rounded-lg transition-colors duration-200">
+                            Browse Jobs
+                        </a>
+                        <a href="{% url 'jobs:cv_creator' %}" class="block w-full text-left px-4 py-2 text-primary hover:bg-secondary rounded-lg transition-colors duration-200">
+                            Create CV
+                        </a>
+                        <a href="{% url 'jobs:salary_calculator' %}" class="block w-full text-left px-4 py-2 text-primary hover:bg-secondary rounded-lg transition-colors duration-200">
+                            Salary Calculator
+                        </a>
+                        <a href="{% url 'blog:blog_list' %}" class="block w-full text-left px-4 py-2 text-primary hover:bg-secondary rounded-lg transition-colors duration-200">
+                            Career Advice
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Add any profile-specific JavaScript here
+    document.addEventListener('DOMContentLoaded', function() {
+        // Profile interaction handlers can be added here
+        console.log('Profile page loaded');
+    });
+</script>
+{% endblock %}

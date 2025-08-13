@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ page_title }} - JobRite.com{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-secondary to-gray-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8">
+        <!-- Header -->
+        <div class="text-center">
+            <h2 class="mt-6 text-3xl font-bold text-text-primary">
+                Create Your Account
+            </h2>
+            <p class="mt-2 text-sm text-text-secondary">
+                Join thousands of professionals finding their dream jobs
+            </p>
+        </div>
+
+        <!-- Registration Form -->
+        <div class="bg-white rounded-xl shadow-lg p-8">
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+                
+                <!-- Name Fields -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label for="{{ form.first_name.id_for_label }}" class="block text-sm font-medium text-text-primary mb-2">
+                            First Name *
+                        </label>
+                        {{ form.first_name }}
+                        {% if form.first_name.errors %}
+                            <div class="mt-1 text-sm text-red-600">
+                                {{ form.first_name.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label for="{{ form.last_name.id_for_label }}" class="block text-sm font-medium text-text-primary mb-2">
+                            Last Name *
+                        </label>
+                        {{ form.last_name }}
+                        {% if form.last_name.errors %}
+                            <div class="mt-1 text-sm text-red-600">
+                                {{ form.last_name.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Email Field -->
+                <div>
+                    <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-text-primary mb-2">
+                        Email Address *
+                    </label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                        <div class="mt-1 text-sm text-red-600">
+                            {{ form.email.errors.0 }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Username Field -->
+                <div>
+                    <label for="{{ form.username.id_for_label }}" class="block text-sm font-medium text-text-primary mb-2">
+                        Username *
+                    </label>
+                    {{ form.username }}
+                    {% if form.username.errors %}
+                        <div class="mt-1 text-sm text-red-600">
+                            {{ form.username.errors.0 }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Password Fields -->
+                <div>
+                    <label for="{{ form.password1.id_for_label }}" class="block text-sm font-medium text-text-primary mb-2">
+                        Password *
+                    </label>
+                    {{ form.password1 }}
+                    {% if form.password1.errors %}
+                        <div class="mt-1 text-sm text-red-600">
+                            {{ form.password1.errors.0 }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label for="{{ form.password2.id_for_label }}" class="block text-sm font-medium text-text-primary mb-2">
+                        Confirm Password *
+                    </label>
+                    {{ form.password2 }}
+                    {% if form.password2.errors %}
+                        <div class="mt-1 text-sm text-red-600">
+                            {{ form.password2.errors.0 }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Terms and Conditions -->
+                <div class="flex items-start">
+                    <input type="checkbox" id="terms" name="terms" required 
+                           class="mt-1 h-4 w-4 text-accent focus:ring-accent border-gray-300 rounded">
+                    <label for="terms" class="ml-2 text-sm text-text-secondary">
+                        I agree to the <a href="#" class="text-accent hover:text-orange-600">Terms of Service</a> 
+                        and <a href="#" class="text-accent hover:text-orange-600">Privacy Policy</a>
+                    </label>
+                </div>
+
+                <!-- Submit Button -->
+                <div>
+                    <button type="submit" 
+                            class="w-full bg-accent text-white py-3 px-4 rounded-lg hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 transition-colors duration-200 font-semibold">
+                        Create Account
+                    </button>
+                </div>
+
+                <!-- Login Link -->
+                <div class="text-center">
+                    <p class="text-sm text-text-secondary">
+                        Already have an account? 
+                        <a href="{% url 'users:login' %}" class="text-accent hover:text-orange-600 font-medium">
+                            Sign in here
+                        </a>
+                    </p>
+                </div>
+            </form>
+        </div>
+
+        <!-- Social Login (Future Enhancement) -->
+        <div class="text-center">
+            <p class="text-xs text-text-secondary">
+                By creating an account, you agree to receive job recommendations and updates from JobRite.com
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add real-time validation feedback
+    const form = document.querySelector('form');
+    const inputs = form.querySelectorAll('input[type="text"], input[type="email"], input[type="password"]');
+    
+    inputs.forEach(input => {
+        input.addEventListener('blur', function() {
+            if (this.value.trim() !== '') {
+                this.classList.add('border-green-300');
+                this.classList.remove('border-gray-300');
+            } else {
+                this.classList.remove('border-green-300');
+                this.classList.add('border-gray-300');
+            }
+        });
+    });
+    
+    // Password strength indicator (basic)
+    const password1 = document.getElementById('{{ form.password1.id_for_label }}');
+    if (password1) {
+        password1.addEventListener('input', function() {
+            const strength = this.value.length >= 8 ? 'strong' : this.value.length >= 6 ? 'medium' : 'weak';
+            // You can add visual feedback here
+        });
+    }
+});
+</script>
+{% endblock %}
