@@ -137,7 +137,6 @@ function initParticleAnimation() {
     // Disabled - using template-based particle system in home.html for better control
     return;
 }
-}
 
 /**
  * Scroll Animations
