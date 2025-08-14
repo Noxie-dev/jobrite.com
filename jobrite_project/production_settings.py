@@ -12,7 +12,12 @@ DEBUG = False
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-m5aj!e*_vpvmd7rhw7i$k2yixbw+06djzfo*u393k3&h_nbxy0')
 
 # Get allowed hosts from environment variable
-ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',') + [
+    '.onrender.com',  # Render domains
+    '.render.com',    # Alternative Render domains
+    '.herokuapp.com', # Heroku domains
+    '.railway.app',   # Railway domains
+]
 
 # Database configuration for production
 # Default to SQLite, but can be overridden with environment variables
@@ -26,7 +31,12 @@ DATABASES = {
 # Override with PostgreSQL if DATABASE_URL is provided
 if 'DATABASE_URL' in os.environ:
     import dj_database_url
-    DATABASES['default'] = dj_database_url.parse(os.environ['DATABASE_URL'])
+    DATABASES['default'] = dj_database_url.parse(os.environ['DATABASE_URL'], conn_max_age=600)
+
+# Supabase Configuration
+SUPABASE_URL = os.environ.get('SUPABASE_URL')
+SUPABASE_KEY = os.environ.get('SUPABASE_KEY')
+SUPABASE_SERVICE_KEY = os.environ.get('SUPABASE_SERVICE_KEY')
 
 # Static files configuration for production
 STATIC_URL = '/static/'

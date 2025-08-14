@@ -3,7 +3,7 @@ MoneyRite Financial Calculation Utilities
 South African tax calculations with versioned rate engine
 """
 
-from decimal import Decimal, ROUND_HALF_UP
+from decimal import Decimal, ROUND_HALF_UP, InvalidOperation
 from typing import Dict, Tuple
 import logging
 
@@ -58,7 +58,7 @@ class SARSTaxCalculator:
         try:
             from .rate_engine import rate_engine
             return rate_engine
-        except ImportError as e:
+        except (ImportError, Exception) as e:
             logger.warning(f"Rate engine not available, using fallback rates: {e}")
             return None
 
@@ -74,8 +74,7 @@ class SARSTaxCalculator:
         return None
 
     @classmethod
-    @property
-    def TAX_BRACKETS(cls):
+    def get_tax_brackets(cls):
         """Get current tax brackets"""
         config = cls._get_current_config()
         if config:
@@ -88,8 +87,7 @@ class SARSTaxCalculator:
         return cls.FALLBACK_TAX_BRACKETS
 
     @classmethod
-    @property
-    def PRIMARY_REBATE(cls):
+    def get_primary_rebate(cls):
         """Get primary tax rebate"""
         config = cls._get_current_config()
         if config:
@@ -97,6 +95,31 @@ class SARSTaxCalculator:
                 if rebate.age_category == 'under_65':
                     return rebate.amount
         return cls.FALLBACK_PRIMARY_REBATE
+
+    @classmethod
+    def get_secondary_rebate(cls):
+        """Get secondary tax rebate (65-74 years)"""
+        config = cls._get_current_config()
+        if config:
+            for rebate in config.tax_rebates:
+                if rebate.age_category == '65_to_74':
+                    return rebate.amount
+        return cls.FALLBACK_SECONDARY_REBATE
+
+    @classmethod
+    def get_tertiary_rebate(cls):
+        """Get tertiary tax rebate (75+ years)"""
+        config = cls._get_current_config()
+        if config:
+            for rebate in config.tax_rebates:
+                if rebate.age_category == '75_plus':
+                    return rebate.amount
+        return cls.FALLBACK_TERTIARY_REBATE
+
+    # Add missing medical credit constants for backward compatibility
+    MEDICAL_CREDIT_MAIN = FALLBACK_MEDICAL_CREDIT_MAIN
+    MEDICAL_CREDIT_DEPENDENT = FALLBACK_MEDICAL_CREDIT_DEPENDENT
+    MEDICAL_CREDIT_ADDITIONAL = FALLBACK_MEDICAL_CREDIT_ADDITIONAL
 
     @classmethod
     @property
@@ -169,7 +192,7 @@ class SARSTaxCalculator:
         tax_before_rebates = Decimal('0')
         previous_limit = Decimal('0')
 
-        for bracket_limit, rate in cls.TAX_BRACKETS:
+        for bracket_limit, rate in cls.get_tax_brackets():
             current_limit = Decimal(str(bracket_limit)) if bracket_limit != float('inf') else annual_income
 
             if annual_income <= previous_limit:
@@ -189,11 +212,11 @@ class SARSTaxCalculator:
                 break
 
         # Apply age-based rebates
-        total_rebate = cls.PRIMARY_REBATE
+        total_rebate = cls.get_primary_rebate()
         if age_category == '65_to_74':
-            total_rebate += cls.SECONDARY_REBATE
+            total_rebate += cls.get_secondary_rebate()
         elif age_category == '75_plus':
-            total_rebate += cls.SECONDARY_REBATE + cls.TERTIARY_REBATE
+            total_rebate += cls.get_secondary_rebate() + cls.get_tertiary_rebate()
 
         # Final tax calculation
         annual_tax = max(Decimal('0'), tax_before_rebates - total_rebate)
@@ -210,10 +233,11 @@ class SARSTaxCalculator:
     @classmethod
     def _get_marginal_rate(cls, annual_income: Decimal) -> Decimal:
         """Get the marginal tax rate for given income"""
-        for bracket_limit, rate in cls.TAX_BRACKETS:
+        for bracket_limit, rate in cls.get_tax_brackets():
             if annual_income <= bracket_limit:
                 return rate * 100  # Return as percentage
-        return cls.TAX_BRACKETS[-1][1] * 100  # Highest bracket
+        brackets = cls.get_tax_brackets()
+        return brackets[-1][1] * 100  # Highest bracket
 
     @classmethod
     def get_tax_breakdown(cls, annual_income: Decimal, age_category: str = 'under_65') -> dict:
@@ -233,7 +257,7 @@ class SARSTaxCalculator:
         total_tax = Decimal('0')
         previous_limit = Decimal('0')
 
-        for bracket_limit, rate in cls.TAX_BRACKETS:
+        for bracket_limit, rate in cls.get_tax_brackets():
             current_limit = Decimal(str(bracket_limit)) if bracket_limit != float('inf') else annual_income
 
             if annual_income <= previous_limit:
@@ -264,20 +288,20 @@ class SARSTaxCalculator:
                 break
 
         # Calculate rebates
-        total_rebate = cls.PRIMARY_REBATE
+        total_rebate = cls.get_primary_rebate()
         if age_category == '65_to_74':
-            total_rebate += cls.SECONDARY_REBATE
+            total_rebate += cls.get_secondary_rebate()
         elif age_category == '75_plus':
-            total_rebate += cls.SECONDARY_REBATE + cls.TERTIARY_REBATE
+            total_rebate += cls.get_secondary_rebate() + cls.get_tertiary_rebate()
 
         final_tax = max(Decimal('0'), total_tax - total_rebate)
 
         return {
             'brackets': brackets,
             'total_before_rebates': f"R{total_tax:,.2f}",
-            'primary_rebate': f"R{cls.PRIMARY_REBATE:,.2f}",
-            'secondary_rebate': f"R{cls.SECONDARY_REBATE:,.2f}" if age_category != 'under_65' else None,
-            'tertiary_rebate': f"R{cls.TERTIARY_REBATE:,.2f}" if age_category == '75_plus' else None,
+            'primary_rebate': f"R{cls.get_primary_rebate():,.2f}",
+            'secondary_rebate': f"R{cls.get_secondary_rebate():,.2f}" if age_category != 'under_65' else None,
+            'tertiary_rebate': f"R{cls.get_tertiary_rebate():,.2f}" if age_category == '75_plus' else None,
             'total_rebate': f"R{total_rebate:,.2f}",
             'final_tax': f"R{final_tax:,.2f}",
             'effective_rate': f"{(final_tax / annual_income * 100) if annual_income > 0 else 0:.2f}%"
@@ -382,8 +406,18 @@ def calculate_net_salary(gross_monthly: Decimal, include_medical: bool = False,
     Returns:
         Dict with complete salary breakdown including pay rate conversions
     """
-    gross_monthly = Decimal(str(gross_monthly))
-    pension_percentage = Decimal(str(pension_percentage))
+    # Input validation
+    try:
+        gross_monthly = Decimal(str(gross_monthly))
+        pension_percentage = Decimal(str(pension_percentage))
+    except (ValueError, TypeError, InvalidOperation):
+        raise ValueError("Invalid input: gross_monthly and pension_percentage must be numeric")
+    
+    if gross_monthly < 0:
+        raise ValueError("gross_monthly must be non-negative")
+    
+    # Clamp pension percentage to valid range
+    pension_percentage = max(Decimal('0'), min(pension_percentage, Decimal('27.5')))
 
     # Calculate annual figures for tax calculation
     gross_annual = gross_monthly * Decimal('12')

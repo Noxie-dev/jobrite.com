@@ -157,3 +157,5 @@ create_test_user.py
 jobrite/
 jobriteTests/
 jobriteUITests/
+# Local Netlify folder
+.netlify

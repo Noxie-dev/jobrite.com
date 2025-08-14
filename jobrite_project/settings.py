@@ -10,7 +10,13 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
+from dotenv import load_dotenv
+import dj_database_url
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +26,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-m5aj!e*_vpvmd7rhw7i$k2yixbw+06djzfo*u393k3&h_nbxy0"
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-m5aj!e*_vpvmd7rhw7i$k2yixbw+06djzfo*u393k3&h_nbxy0')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'True').lower() == 'true'
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'testserver', '0.0.0.0']
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,testserver,0.0.0.0').split(',')
 
 
 # Application definition
@@ -76,12 +82,27 @@ WSGI_APPLICATION = "jobrite_project.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+# Use Supabase PostgreSQL database
+DATABASE_URL = os.environ.get('DATABASE_URL')
+
+if DATABASE_URL:
+    # Production/Supabase configuration
+    DATABASES = {
+        'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600)
     }
-}
+else:
+    # Fallback to SQLite for local development without Supabase
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
+
+# Supabase Configuration
+SUPABASE_URL = os.environ.get('SUPABASE_URL')
+SUPABASE_KEY = os.environ.get('SUPABASE_KEY')
+SUPABASE_SERVICE_KEY = os.environ.get('SUPABASE_SERVICE_KEY')
 
 
 # Password validation
@@ -150,9 +171,7 @@ SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 
 # Email Configuration
-# For development, we'll use console backend to print emails to console
-# In production, configure with actual SMTP settings
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
 
 # For production, use these settings instead:
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -163,11 +182,11 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # EMAIL_HOST_PASSWORD = 'your-app-password'
 
 # Default from email
-DEFAULT_FROM_EMAIL = 'JobRite Team <noreply@jobrite.com>'
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'JobRite Team <noreply@jobrite.com>')
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
 
 # Site URL for email templates
-SITE_URL = 'http://localhost:8000'  # Change this in production
+SITE_URL = os.environ.get('SITE_URL', 'http://localhost:8000')
 
 # Password reset timeout (in seconds) - 24 hours
 PASSWORD_RESET_TIMEOUT = 86400
