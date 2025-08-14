@@ -1,0 +1,296 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ page_title }} - MoneyRite{% endblock %}
+
+{% block extra_head %}
+<style>
+    .moneyrite-hero {
+        background: linear-gradient(135deg, var(--primary-color) 0%, #1a2d3a 100%);
+        color: white;
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+    }
+    
+    .form-card {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e5e7eb;
+    }
+    
+    .debt-summary {
+        position: sticky;
+        top: 2rem;
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e5e7eb;
+    }
+    
+    @media (max-width: 1024px) {
+        .debt-summary {
+            position: static;
+            margin-top: 2rem;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .form-card {
+            padding: 1.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- MoneyRite Hero Section -->
+<div class="moneyrite-hero">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+            <h1 class="text-3xl md:text-4xl font-bold mb-4">{{ page_title }}</h1>
+            <p class="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto">
+                Track your debt and plan your payoff strategy.
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Debt Form -->
+        <div class="lg:col-span-2">
+            <form method="post" id="debt-form">
+                {% csrf_token %}
+                
+                <div class="form-card">
+                    <h2 class="text-2xl font-bold text-primary mb-6">Debt Information</h2>
+                    
+                    <!-- Account Name -->
+                    <div class="form-group">
+                        <label for="{{ form.account_name.id_for_label }}" class="form-label">
+                            {{ form.account_name.label }}
+                        </label>
+                        {{ form.account_name }}
+                        {% if form.account_name.errors %}
+                            <div class="text-red-600 text-sm mt-1">
+                                {{ form.account_name.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Debt Type -->
+                    <div class="form-group">
+                        <label for="{{ form.debt_type.id_for_label }}" class="form-label">
+                            {{ form.debt_type.label }}
+                        </label>
+                        {{ form.debt_type }}
+                        {% if form.debt_type.errors %}
+                            <div class="text-red-600 text-sm mt-1">
+                                {{ form.debt_type.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Creditor Name -->
+                    <div class="form-group">
+                        <label for="{{ form.creditor_name.id_for_label }}" class="form-label">
+                            {{ form.creditor_name.label }}
+                        </label>
+                        {{ form.creditor_name }}
+                        {% if form.creditor_name.errors %}
+                            <div class="text-red-600 text-sm mt-1">
+                                {{ form.creditor_name.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Financial Details -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="form-group">
+                            <label for="{{ form.original_amount.id_for_label }}" class="form-label">
+                                {{ form.original_amount.label }}
+                            </label>
+                            {{ form.original_amount }}
+                            {% if form.original_amount.errors %}
+                                <div class="text-red-600 text-sm mt-1">
+                                    {{ form.original_amount.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="{{ form.current_balance.id_for_label }}" class="form-label">
+                                {{ form.current_balance.label }}
+                            </label>
+                            {{ form.current_balance }}
+                            {% if form.current_balance.errors %}
+                                <div class="text-red-600 text-sm mt-1">
+                                    {{ form.current_balance.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="{{ form.annual_interest_rate.id_for_label }}" class="form-label">
+                                {{ form.annual_interest_rate.label }}
+                            </label>
+                            {{ form.annual_interest_rate }}
+                            {% if form.annual_interest_rate.errors %}
+                                <div class="text-red-600 text-sm mt-1">
+                                    {{ form.annual_interest_rate.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="{{ form.monthly_payment.id_for_label }}" class="form-label">
+                                {{ form.monthly_payment.label }}
+                            </label>
+                            {{ form.monthly_payment }}
+                            {% if form.monthly_payment.errors %}
+                                <div class="text-red-600 text-sm mt-1">
+                                    {{ form.monthly_payment.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Optional Details -->
+                    <div class="border-t pt-6 mt-6">
+                        <h3 class="text-lg font-semibold mb-4">Optional Details</h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="form-group">
+                                <label for="{{ form.original_term_months.id_for_label }}" class="form-label">
+                                    {{ form.original_term_months.label }}
+                                </label>
+                                {{ form.original_term_months }}
+                                {% if form.original_term_months.errors %}
+                                    <div class="text-red-600 text-sm mt-1">
+                                        {{ form.original_term_months.errors.0 }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="{{ form.next_payment_date.id_for_label }}" class="form-label">
+                                    {{ form.next_payment_date.label }}
+                                </label>
+                                {{ form.next_payment_date }}
+                                {% if form.next_payment_date.errors %}
+                                    <div class="text-red-600 text-sm mt-1">
+                                        {{ form.next_payment_date.errors.0 }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Form Actions -->
+                    <div class="mt-8 flex flex-col sm:flex-row gap-4">
+                        <button type="submit" class="btn btn-primary flex-1">
+                            {% if debt %}Update Debt{% else %}Add Debt{% endif %}
+                        </button>
+                        <a href="{% url 'moneyrite:credit_tracker' %}" class="btn btn-outline flex-1 text-center">
+                            Cancel
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Debt Calculator -->
+        <div class="lg:col-span-1">
+            <div class="debt-summary">
+                <h3 class="text-xl font-semibold mb-4">Debt Calculator</h3>
+                
+                <div class="space-y-4" id="debt-calculations">
+                    <div class="text-center text-gray-500">
+                        Enter debt details to see calculations
+                    </div>
+                </div>
+                
+                <!-- Debt Tips -->
+                <div class="mt-6 p-3 bg-blue-50 rounded-lg">
+                    <h4 class="font-semibold text-blue-900 mb-2">💡 Tip</h4>
+                    <p class="text-sm text-blue-800">
+                        Make extra payments toward the principal to pay off your debt faster and save on interest.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('debt-form');
+    const calculationsDiv = document.getElementById('debt-calculations');
+    
+    function updateCalculations() {
+        const currentBalance = parseFloat(document.getElementById('{{ form.current_balance.id_for_label }}').value) || 0;
+        const annualRate = parseFloat(document.getElementById('{{ form.annual_interest_rate.id_for_label }}').value) || 0;
+        const monthlyPayment = parseFloat(document.getElementById('{{ form.monthly_payment.id_for_label }}').value) || 0;
+        
+        if (currentBalance > 0 && annualRate > 0 && monthlyPayment > 0) {
+            const monthlyRate = annualRate / 12 / 100;
+            const monthlyInterest = currentBalance * monthlyRate;
+            const principalPayment = Math.max(0, monthlyPayment - monthlyInterest);
+            
+            let payoffMonths = null;
+            if (monthlyPayment > monthlyInterest) {
+                let balance = currentBalance;
+                let months = 0;
+                while (balance > 0 && months < 600) {
+                    const interest = balance * monthlyRate;
+                    const principal = monthlyPayment - interest;
+                    if (principal <= 0) break;
+                    balance -= principal;
+                    months++;
+                }
+                if (balance <= 0) payoffMonths = months;
+            }
+            
+            calculationsDiv.innerHTML = `
+                <div class="space-y-3">
+                    <div class="flex justify-between">
+                        <span class="text-sm text-gray-600">Monthly Interest</span>
+                        <span class="font-medium">R${monthlyInterest.toFixed(2)}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-sm text-gray-600">Principal Payment</span>
+                        <span class="font-medium">R${principalPayment.toFixed(2)}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-sm text-gray-600">Payoff Time</span>
+                        <span class="font-medium">${payoffMonths ? payoffMonths + ' months' : 'N/A'}</span>
+                    </div>
+                    ${payoffMonths ? `
+                    <div class="flex justify-between">
+                        <span class="text-sm text-gray-600">Payoff Years</span>
+                        <span class="font-medium">${(payoffMonths / 12).toFixed(1)} years</span>
+                    </div>
+                    ` : ''}
+                </div>
+            `;
+        } else {
+            calculationsDiv.innerHTML = '<div class="text-center text-gray-500">Enter debt details to see calculations</div>';
+        }
+    }
+    
+    // Add event listeners to relevant fields
+    ['{{ form.current_balance.id_for_label }}', '{{ form.annual_interest_rate.id_for_label }}', '{{ form.monthly_payment.id_for_label }}'].forEach(id => {
+        const element = document.getElementById(id);
+        if (element) {
+            element.addEventListener('input', updateCalculations);
+        }
+    });
+    
+    // Initial calculation
+    updateCalculations();
+});
+</script>
+{% endblock %}

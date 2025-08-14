@@ -1,0 +1,1 @@
+# MoneyRite Test Suite

@@ -83,36 +83,43 @@
     }
 }
 
-/* Mobile typography improvements */
+/* Enhanced Mobile Typography - Standardized Design System */
 @media (max-width: 768px) {
     h1 {
         font-size: 2rem;
         line-height: 1.2;
-        margin-bottom: 1rem;
+        margin-bottom: var(--space-md);
+        font-weight: var(--font-weight-extrabold);
+        font-family: var(--font-primary);
     }
-    
+
     h2 {
         font-size: 1.75rem;
         line-height: 1.3;
-        margin-bottom: 0.875rem;
+        margin-bottom: var(--space-md);
+        font-weight: var(--font-weight-bold);
+        font-family: var(--font-primary);
     }
-    
+
     h3 {
         font-size: 1.5rem;
         line-height: 1.3;
-        margin-bottom: 0.75rem;
+        margin-bottom: var(--space-sm);
+        font-weight: var(--font-weight-semibold);
+        font-family: var(--font-primary);
     }
-    
+
     p {
         font-size: 1rem;
         line-height: 1.6;
-        margin-bottom: 1rem;
+        margin-bottom: var(--space-md);
+        font-family: var(--font-primary);
     }
-    
+
     .text-sm {
         font-size: 0.875rem;
     }
-    
+
     .text-xs {
         font-size: 0.75rem;
     }

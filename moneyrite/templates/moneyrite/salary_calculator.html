@@ -1,0 +1,341 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Salary & Tax Calculator - MoneyRite{% endblock %}
+
+{% block extra_head %}
+<style>
+    .moneyrite-hero {
+        background: linear-gradient(135deg, var(--primary-color) 0%, #1a2d3a 100%);
+        color: white;
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+    }
+    
+    .calculator-card {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e5e7eb;
+    }
+    
+    .result-card {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 1.5rem;
+        border: 1px solid #e2e8f0;
+    }
+    
+    .conversion-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+    
+    .conversion-item {
+        background: white;
+        padding: 1rem;
+        border-radius: 8px;
+        text-align: center;
+        border: 1px solid #e5e7eb;
+    }
+    
+    .breakdown-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #e5e7eb;
+    }
+    
+    .breakdown-item:last-child {
+        border-bottom: none;
+        font-weight: 600;
+        color: var(--primary-color);
+    }
+    
+    @media (max-width: 768px) {
+        .calculator-card {
+            padding: 1.5rem;
+        }
+        
+        .conversion-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- MoneyRite Hero Section -->
+<div class="moneyrite-hero">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+            <h1 class="text-3xl md:text-4xl font-bold mb-4">Salary & Tax Calculator</h1>
+            <p class="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto">
+                Calculate your net salary after SARS tax and UIF deductions. Convert between different pay periods.
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Calculator Form -->
+        <div class="calculator-card">
+            <h2 class="text-2xl font-bold text-primary mb-6">Calculate Your Salary</h2>
+            
+            <form method="post" id="salary-form">
+                {% csrf_token %}
+                
+                <!-- Pay Amount -->
+                <div class="form-group">
+                    <label for="{{ form.pay_amount.id_for_label }}" class="form-label">
+                        {{ form.pay_amount.label }}
+                    </label>
+                    {{ form.pay_amount }}
+                    {% if form.pay_amount.errors %}
+                        <div class="text-red-600 text-sm mt-1">
+                            {{ form.pay_amount.errors.0 }}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Pay Period -->
+                <div class="form-group">
+                    <label for="{{ form.pay_period.id_for_label }}" class="form-label">
+                        {{ form.pay_period.label }}
+                    </label>
+                    {{ form.pay_period }}
+                    {% if form.pay_period.errors %}
+                        <div class="text-red-600 text-sm mt-1">
+                            {{ form.pay_period.errors.0 }}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Hours Per Week (conditional) -->
+                <div class="form-group" id="hours-group" style="display: none;">
+                    <label for="{{ form.hours_per_week.id_for_label }}" class="form-label">
+                        {{ form.hours_per_week.label }}
+                    </label>
+                    {{ form.hours_per_week }}
+                    <div class="text-sm text-gray-600 mt-1">
+                        {{ form.hours_per_week.help_text }}
+                    </div>
+                    {% if form.hours_per_week.errors %}
+                        <div class="text-red-600 text-sm mt-1">
+                            {{ form.hours_per_week.errors.0 }}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Advanced Options -->
+                <div class="border-t pt-6 mt-6">
+                    <h3 class="text-lg font-semibold mb-4">Advanced Options</h3>
+                    
+                    <!-- Medical Aid -->
+                    <div class="form-group">
+                        <div class="flex items-center">
+                            {{ form.include_medical_aid }}
+                            <label for="{{ form.include_medical_aid.id_for_label }}" class="ml-2">
+                                {{ form.include_medical_aid.label }}
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" id="medical-members-group" style="display: none;">
+                        <label for="{{ form.medical_aid_members.id_for_label }}" class="form-label">
+                            {{ form.medical_aid_members.label }}
+                        </label>
+                        {{ form.medical_aid_members }}
+                        {% if form.medical_aid_members.errors %}
+                            <div class="text-red-600 text-sm mt-1">
+                                {{ form.medical_aid_members.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Pension -->
+                    <div class="form-group">
+                        <label for="{{ form.pension_percentage.id_for_label }}" class="form-label">
+                            {{ form.pension_percentage.label }}
+                        </label>
+                        {{ form.pension_percentage }}
+                        <div class="text-sm text-gray-600 mt-1">
+                            {{ form.pension_percentage.help_text }}
+                        </div>
+                        {% if form.pension_percentage.errors %}
+                            <div class="text-red-600 text-sm mt-1">
+                                {{ form.pension_percentage.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="mt-8">
+                    <button type="submit" class="btn btn-primary w-full">
+                        Calculate Salary
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Results -->
+        <div class="space-y-6">
+            {% if calculation and salary_breakdown %}
+            <!-- Pay Rate Conversions -->
+            <div class="result-card">
+                <h3 class="text-xl font-semibold mb-4">Pay Rate Conversions</h3>
+                <div class="conversion-grid">
+                    <div class="conversion-item">
+                        <div class="text-sm text-gray-600">Hourly</div>
+                        <div class="text-lg font-semibold">R{{ salary_breakdown.conversions.hourly|floatformat:2 }}</div>
+                    </div>
+                    <div class="conversion-item">
+                        <div class="text-sm text-gray-600">Daily</div>
+                        <div class="text-lg font-semibold">R{{ salary_breakdown.conversions.daily|floatformat:2 }}</div>
+                    </div>
+                    <div class="conversion-item">
+                        <div class="text-sm text-gray-600">Weekly</div>
+                        <div class="text-lg font-semibold">R{{ salary_breakdown.conversions.weekly|floatformat:2 }}</div>
+                    </div>
+                    <div class="conversion-item">
+                        <div class="text-sm text-gray-600">Monthly</div>
+                        <div class="text-lg font-semibold">R{{ salary_breakdown.conversions.monthly|floatformat:2 }}</div>
+                    </div>
+                    <div class="conversion-item">
+                        <div class="text-sm text-gray-600">Annually</div>
+                        <div class="text-lg font-semibold">R{{ salary_breakdown.conversions.annually|floatformat:2 }}</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Salary Breakdown -->
+            <div class="result-card">
+                <h3 class="text-xl font-semibold mb-4">Monthly Salary Breakdown</h3>
+                <div class="space-y-2">
+                    <div class="breakdown-item">
+                        <span>Gross Monthly Salary</span>
+                        <span class="font-medium">R{{ salary_breakdown.gross_monthly|floatformat:2 }}</span>
+                    </div>
+                    {% if salary_breakdown.pension_monthly > 0 %}
+                    <div class="breakdown-item">
+                        <span>Pension Contribution</span>
+                        <span class="font-medium text-red-600">-R{{ salary_breakdown.pension_monthly|floatformat:2 }}</span>
+                    </div>
+                    {% endif %}
+                    <div class="breakdown-item">
+                        <span>Income Tax</span>
+                        <span class="font-medium text-red-600">-R{{ salary_breakdown.income_tax_monthly|floatformat:2 }}</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span>UIF (1%)</span>
+                        <span class="font-medium text-red-600">-R{{ salary_breakdown.uif_monthly|floatformat:2 }}</span>
+                    </div>
+                    {% if salary_breakdown.medical_credit_monthly > 0 %}
+                    <div class="breakdown-item">
+                        <span>Medical Tax Credit</span>
+                        <span class="font-medium text-green-600">+R{{ salary_breakdown.medical_credit_monthly|floatformat:2 }}</span>
+                    </div>
+                    {% endif %}
+                    <div class="breakdown-item">
+                        <span>Net Monthly Salary</span>
+                        <span class="font-bold text-xl">R{{ salary_breakdown.net_monthly|floatformat:2 }}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tax Information -->
+            <div class="result-card">
+                <h3 class="text-xl font-semibold mb-4">Tax Information</h3>
+                <div class="space-y-2">
+                    <div class="flex justify-between">
+                        <span>Effective Tax Rate</span>
+                        <span class="font-medium">{{ salary_breakdown.effective_tax_rate|floatformat:2 }}%</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Marginal Tax Rate</span>
+                        <span class="font-medium">{{ salary_breakdown.marginal_tax_rate|floatformat:2 }}%</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Annual Taxable Income</span>
+                        <span class="font-medium">R{{ salary_breakdown.taxable_annual|floatformat:2 }}</span>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <!-- Placeholder -->
+            <div class="result-card text-center">
+                <div class="text-gray-500 mb-4">
+                    <svg class="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-lg font-semibold mb-2">Ready to Calculate</h3>
+                <p class="text-gray-600">
+                    Enter your salary information to see detailed calculations and conversions.
+                </p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Recent Calculations -->
+    {% if recent_calculations %}
+    <div class="mt-12">
+        <h2 class="text-2xl font-bold text-primary mb-6">Recent Calculations</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for calc in recent_calculations %}
+            <div class="bg-white rounded-lg p-4 shadow border">
+                <div class="flex justify-between items-start mb-2">
+                    <span class="text-sm text-gray-600">{{ calc.created_at|date:"M d, Y" }}</span>
+                </div>
+                <div class="space-y-1">
+                    <div class="font-medium">R{{ calc.pay_amount }} / {{ calc.pay_period }}</div>
+                    <div class="text-sm text-gray-600">
+                        Net: R{{ calc.net_monthly|floatformat:2 }}/month
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const payPeriodSelect = document.getElementById('{{ form.pay_period.id_for_label }}');
+    const hoursGroup = document.getElementById('hours-group');
+    const medicalCheckbox = document.getElementById('{{ form.include_medical_aid.id_for_label }}');
+    const medicalMembersGroup = document.getElementById('medical-members-group');
+    
+    // Show/hide hours per week based on pay period
+    function toggleHoursField() {
+        if (payPeriodSelect.value === 'hourly') {
+            hoursGroup.style.display = 'block';
+        } else {
+            hoursGroup.style.display = 'none';
+        }
+    }
+    
+    // Show/hide medical members based on checkbox
+    function toggleMedicalMembers() {
+        if (medicalCheckbox.checked) {
+            medicalMembersGroup.style.display = 'block';
+        } else {
+            medicalMembersGroup.style.display = 'none';
+        }
+    }
+    
+    payPeriodSelect.addEventListener('change', toggleHoursField);
+    medicalCheckbox.addEventListener('change', toggleMedicalMembers);
+    
+    // Initialize
+    toggleHoursField();
+    toggleMedicalMembers();
+});
+</script>
+{% endblock %}

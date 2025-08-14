@@ -1,0 +1,315 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Credit & Debt Tracker - MoneyRite{% endblock %}
+
+{% block extra_head %}
+<style>
+    .moneyrite-hero {
+        background: linear-gradient(135deg, var(--primary-color) 0%, #1a2d3a 100%);
+        color: white;
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+    }
+    
+    .debt-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e5e7eb;
+        transition: all 0.3s ease;
+    }
+    
+    .debt-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+    }
+    
+    .debt-summary {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .summary-stat {
+        text-align: center;
+        padding: 1rem;
+    }
+    
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary-color);
+    }
+    
+    .stat-label {
+        font-size: 0.875rem;
+        color: #6b7280;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    
+    .debt-type-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    
+    .debt-type-home_loan { background: #dbeafe; color: #1e40af; }
+    .debt-type-car_loan { background: #dcfce7; color: #166534; }
+    .debt-type-personal_loan { background: #fef3c7; color: #92400e; }
+    .debt-type-credit_card { background: #fecaca; color: #991b1b; }
+    .debt-type-store_account { background: #e0e7ff; color: #3730a3; }
+    .debt-type-student_loan { background: #f3e8ff; color: #6b21a8; }
+    .debt-type-other { background: #f3f4f6; color: #374151; }
+    
+    .progress-bar {
+        width: 100%;
+        height: 8px;
+        background: #e5e7eb;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+    
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #10b981, #059669);
+        transition: width 0.3s ease;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 3rem 1rem;
+        color: #6b7280;
+    }
+    
+    @media (max-width: 768px) {
+        .debt-card {
+            padding: 1rem;
+        }
+        
+        .debt-summary {
+            padding: 1rem;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- MoneyRite Hero Section -->
+<div class="moneyrite-hero">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+            <h1 class="text-3xl md:text-4xl font-bold mb-4">Credit & Debt Tracker</h1>
+            <p class="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto">
+                Track all your debts, calculate payoff times, and monitor your credit health.
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+    <!-- Debt Summary -->
+    {% if active_debts or total_debt > 0 %}
+    <div class="debt-summary">
+        <h2 class="text-xl font-semibold mb-4 text-center">Debt Overview</h2>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="summary-stat">
+                <div class="stat-value">{{ debt_count }}</div>
+                <div class="stat-label">Active Debts</div>
+            </div>
+            <div class="summary-stat">
+                <div class="stat-value">R{{ total_debt|floatformat:2 }}</div>
+                <div class="stat-label">Total Debt</div>
+            </div>
+            <div class="summary-stat">
+                <div class="stat-value">R{{ total_monthly_payments|floatformat:2 }}</div>
+                <div class="stat-label">Monthly Payments</div>
+            </div>
+            <div class="summary-stat">
+                <div class="stat-value">
+                    {% if total_debt > 0 and total_monthly_payments > 0 %}
+                        {% widthratio total_debt total_monthly_payments 1 %}
+                    {% else %}
+                        0
+                    {% endif %}
+                </div>
+                <div class="stat-label">Months to Pay Off</div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Action Bar -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+        <h2 class="text-2xl font-bold text-primary">Your Debts</h2>
+        <a href="{% url 'moneyrite:add_debt' %}" class="btn btn-primary">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            Add Debt Account
+        </a>
+    </div>
+    
+    {% if active_debts %}
+        <!-- Active Debts -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            {% for debt in active_debts %}
+            <div class="debt-card">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h3 class="text-xl font-semibold mb-2">{{ debt.account_name }}</h3>
+                        <span class="debt-type-badge debt-type-{{ debt.debt_type }}">
+                            {{ debt.get_debt_type_display }}
+                        </span>
+                    </div>
+                    <div class="flex space-x-2">
+                        <a href="{% url 'moneyrite:edit_debt' debt.id %}" class="text-gray-500 hover:text-accent">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                            </svg>
+                        </a>
+                        <a href="{% url 'moneyrite:delete_debt' debt.id %}" class="text-gray-500 hover:text-red-600">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                
+                {% if debt.creditor_name %}
+                <div class="text-sm text-gray-600 mb-3">{{ debt.creditor_name }}</div>
+                {% endif %}
+                
+                <!-- Debt Progress -->
+                <div class="mb-4">
+                    <div class="flex justify-between text-sm mb-2">
+                        <span>Progress</span>
+                        <span>
+                            {% widthratio debt.current_balance debt.original_amount 100 as progress %}
+                            {{ progress|floatformat:0 }}% remaining
+                        </span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: {% widthratio debt.current_balance debt.original_amount 100 %}%"></div>
+                    </div>
+                </div>
+                
+                <!-- Debt Details -->
+                <div class="grid grid-cols-2 gap-4 text-sm mb-4">
+                    <div>
+                        <div class="text-gray-600">Current Balance</div>
+                        <div class="font-semibold text-lg">R{{ debt.current_balance|floatformat:2 }}</div>
+                    </div>
+                    <div>
+                        <div class="text-gray-600">Monthly Payment</div>
+                        <div class="font-semibold text-lg">R{{ debt.monthly_payment|floatformat:2 }}</div>
+                    </div>
+                    <div>
+                        <div class="text-gray-600">Interest Rate</div>
+                        <div class="font-semibold">{{ debt.annual_interest_rate }}% p.a.</div>
+                    </div>
+                    <div>
+                        <div class="text-gray-600">Payoff Time</div>
+                        <div class="font-semibold">
+                            {% with payoff_months=debt.payoff_months_remaining %}
+                                {% if payoff_months %}
+                                    {{ payoff_months }} months
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                            {% endwith %}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Actions -->
+                <div class="flex space-x-3 pt-4 border-t">
+                    <a href="{% url 'moneyrite:debt_detail' debt.id %}" class="text-accent hover:underline font-medium">
+                        View Details
+                    </a>
+                    <a href="{% url 'moneyrite:add_payment' debt.id %}" class="text-accent hover:underline font-medium">
+                        Add Payment
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Credit Health Tips -->
+        <div class="bg-blue-50 rounded-lg p-6">
+            <h3 class="text-lg font-semibold text-blue-900 mb-4">💡 Credit Health Tips</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-blue-800">
+                <div>
+                    <strong>Pay on Time:</strong> Payment history is the biggest factor in your credit score. Always pay your instalments on time.
+                </div>
+                <div>
+                    <strong>Keep Utilization Low:</strong> Try to keep credit card balances under 30% of your credit limit.
+                </div>
+                <div>
+                    <strong>Don't Close Old Accounts:</strong> Keep old credit accounts open to maintain a longer credit history.
+                </div>
+                <div>
+                    <strong>Monitor Your Score:</strong> Check your credit report regularly for errors and track your progress.
+                </div>
+            </div>
+        </div>
+        
+    {% else %}
+        <!-- Empty State -->
+        <div class="empty-state">
+            <svg class="w-24 h-24 mx-auto mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg>
+            <h3 class="text-xl font-semibold mb-4">No Debts Tracked Yet</h3>
+            <p class="text-gray-600 mb-6 max-w-md mx-auto">
+                Start tracking your debts to get a clear picture of your financial obligations and create a payoff plan.
+            </p>
+            <a href="{% url 'moneyrite:add_debt' %}" class="btn btn-primary">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                Add Your First Debt
+            </a>
+        </div>
+        
+        <!-- Getting Started Tips -->
+        <div class="mt-12 bg-gray-50 rounded-lg p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">🚀 Getting Started with Debt Tracking</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-accent rounded-full flex items-center justify-center mx-auto mb-3">
+                        <span class="text-white font-bold">1</span>
+                    </div>
+                    <h4 class="font-semibold mb-2">List All Debts</h4>
+                    <p class="text-sm text-gray-600">Add all your debts: home loans, car loans, credit cards, store accounts, and personal loans.</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-accent rounded-full flex items-center justify-center mx-auto mb-3">
+                        <span class="text-white font-bold">2</span>
+                    </div>
+                    <h4 class="font-semibold mb-2">Track Payments</h4>
+                    <p class="text-sm text-gray-600">Record your monthly payments to see how your balances decrease over time.</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-accent rounded-full flex items-center justify-center mx-auto mb-3">
+                        <span class="text-white font-bold">3</span>
+                    </div>
+                    <h4 class="font-semibold mb-2">Plan Payoffs</h4>
+                    <p class="text-sm text-gray-600">Use the payoff calculations to plan extra payments and become debt-free faster.</p>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

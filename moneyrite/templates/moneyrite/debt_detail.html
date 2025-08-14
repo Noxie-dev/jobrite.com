@@ -1,0 +1,283 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ debt.account_name }} - Debt Details - MoneyRite{% endblock %}
+
+{% block extra_head %}
+<style>
+    .moneyrite-hero {
+        background: linear-gradient(135deg, var(--primary-color) 0%, #1a2d3a 100%);
+        color: white;
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+    }
+    
+    .detail-card {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e5e7eb;
+        margin-bottom: 2rem;
+    }
+    
+    .stat-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .stat-item {
+        text-align: center;
+        padding: 1.5rem;
+        background: #f8fafc;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+    }
+    
+    .stat-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+    }
+    
+    .stat-label {
+        font-size: 0.875rem;
+        color: #64748b;
+        font-weight: 500;
+    }
+    
+    .debt-type-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    
+    .debt-type-home_loan { background: #dbeafe; color: #1e40af; }
+    .debt-type-car_loan { background: #dcfce7; color: #166534; }
+    .debt-type-personal_loan { background: #fef3c7; color: #92400e; }
+    .debt-type-credit_card { background: #fee2e2; color: #991b1b; }
+    .debt-type-store_account { background: #f3e8ff; color: #7c3aed; }
+    .debt-type-student_loan { background: #ecfdf5; color: #065f46; }
+    .debt-type-other { background: #f1f5f9; color: #475569; }
+    
+    .payment-history {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+    
+    .payment-item {
+        display: flex;
+        justify-content: between;
+        align-items: center;
+        padding: 1rem;
+        border-bottom: 1px solid #e5e7eb;
+    }
+    
+    .payment-item:last-child {
+        border-bottom: none;
+    }
+    
+    .progress-bar {
+        width: 100%;
+        height: 8px;
+        background: #e5e7eb;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+    
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--accent-color), #f59e0b);
+        transition: width 0.3s ease;
+    }
+    
+    @media (max-width: 768px) {
+        .detail-card {
+            padding: 1.5rem;
+        }
+        
+        .stat-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- MoneyRite Hero Section -->
+<div class="moneyrite-hero">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+            <h1 class="text-3xl md:text-4xl font-bold mb-4">{{ debt.account_name }}</h1>
+            <div class="flex justify-center mb-4">
+                <span class="debt-type-badge debt-type-{{ debt.debt_type }}">
+                    {{ debt.get_debt_type_display }}
+                </span>
+            </div>
+            <p class="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto">
+                Detailed view of your debt account and payment history.
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+    <!-- Debt Overview -->
+    <div class="detail-card">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-primary">Debt Overview</h2>
+            <div class="flex space-x-3">
+                <a href="{% url 'moneyrite:edit_debt' debt.id %}" class="btn btn-outline">
+                    Edit Debt
+                </a>
+                <a href="{% url 'moneyrite:add_payment' debt.id %}" class="btn btn-primary">
+                    Add Payment
+                </a>
+            </div>
+        </div>
+        
+        <!-- Key Statistics -->
+        <div class="stat-grid">
+            <div class="stat-item">
+                <div class="stat-value">R{{ debt.current_balance|floatformat:2 }}</div>
+                <div class="stat-label">Current Balance</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">R{{ debt.original_amount|floatformat:2 }}</div>
+                <div class="stat-label">Original Amount</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">R{{ debt.monthly_payment|floatformat:2 }}</div>
+                <div class="stat-label">Monthly Payment</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">{{ debt.annual_interest_rate }}%</div>
+                <div class="stat-label">Interest Rate (p.a.)</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">
+                    {% if payoff_months %}
+                        {{ payoff_months }} months
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </div>
+                <div class="stat-label">Payoff Time</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">R{{ debt.monthly_interest_amount|floatformat:2 }}</div>
+                <div class="stat-label">Monthly Interest</div>
+            </div>
+        </div>
+        
+        <!-- Progress Bar -->
+        {% if debt.original_amount > 0 %}
+        <div class="mb-4">
+            <div class="flex justify-between text-sm text-gray-600 mb-2">
+                <span>Debt Paid Off</span>
+                <span>{{ debt.progress_percentage|floatformat:1 }}%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: {{ debt.progress_percentage }}%"></div>
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- Debt Details -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+            <div>
+                <h3 class="font-semibold text-gray-900 mb-3">Account Information</h3>
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Creditor:</span>
+                        <span class="font-medium">{{ debt.creditor_name|default:"Not specified" }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Original Term:</span>
+                        <span class="font-medium">{{ debt.original_term_months }} months</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Next Payment:</span>
+                        <span class="font-medium">{{ debt.next_payment_date|date:"M d, Y"|default:"Not set" }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Created:</span>
+                        <span class="font-medium">{{ debt.created_at|date:"M d, Y" }}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+                <h3 class="font-semibold text-gray-900 mb-3">Payment Breakdown</h3>
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Monthly Interest:</span>
+                        <span class="font-medium text-red-600">R{{ debt.monthly_interest_amount|floatformat:2 }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Monthly Principal:</span>
+                        <span class="font-medium text-green-600">R{{ debt.monthly_principal_amount|floatformat:2 }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Total Interest (remaining):</span>
+                        <span class="font-medium">R{{ debt.total_interest_remaining|floatformat:2 }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Payment History -->
+    <div class="detail-card">
+        <h2 class="text-2xl font-bold text-primary mb-6">Recent Payments</h2>
+        
+        {% if payments %}
+        <div class="payment-history">
+            {% for payment in payments %}
+            <div class="payment-item">
+                <div class="flex-1">
+                    <div class="font-medium">{{ payment.payment_date|date:"M d, Y" }}</div>
+                    <div class="text-sm text-gray-600">
+                        Interest: R{{ payment.interest_portion|floatformat:2 }} | 
+                        Principal: R{{ payment.principal_portion|floatformat:2 }}
+                    </div>
+                </div>
+                <div class="text-right">
+                    <div class="font-semibold text-lg">R{{ payment.payment_amount|floatformat:2 }}</div>
+                    <div class="text-sm text-gray-600">Balance: R{{ payment.balance_after_payment|floatformat:2 }}</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-8 text-gray-500">
+            <svg class="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            <h3 class="text-lg font-semibold mb-2">No Payments Yet</h3>
+            <p class="text-gray-600 mb-4">Start tracking your debt payments to see your progress.</p>
+            <a href="{% url 'moneyrite:add_payment' debt.id %}" class="btn btn-primary">
+                Add First Payment
+            </a>
+        </div>
+        {% endif %}
+    </div>
+    
+    <!-- Actions -->
+    <div class="flex flex-col sm:flex-row gap-4">
+        <a href="{% url 'moneyrite:credit_tracker' %}" class="btn btn-outline flex-1 text-center">
+            ← Back to Debt Tracker
+        </a>
+        <a href="{% url 'moneyrite:delete_debt' debt.id %}" class="btn btn-danger flex-1 text-center">
+            Delete Debt Account
+        </a>
+    </div>
+</div>
+{% endblock %}

@@ -1,40 +1,47 @@
 /* JobRite.com Component Styles */
 
-/* Button Components */
+/* Enhanced Button Components - Standardized Design System */
 .btn {
     display: inline-block;
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.5rem;
-    font-weight: 600;
+    padding: var(--space-md) var(--space-lg);
+    border-radius: var(--radius-md);
+    font-weight: var(--font-weight-semibold);
     text-decoration: none;
     text-align: center;
-    transition: all 0.3s ease;
+    transition: all var(--transition-normal);
     cursor: pointer;
     border: none;
     font-size: 1rem;
     line-height: 1.5;
+    font-family: var(--font-primary);
+    position: relative;
+    overflow: hidden;
 }
 
 .btn-primary {
-    background-color: var(--accent-color);
-    color: white;
+    background: linear-gradient(135deg, var(--accent-color) 0%, var(--accent-dark) 100%);
+    color: var(--text-white);
+    box-shadow: var(--shadow-md);
 }
 
 .btn-primary:hover {
-    background-color: #e56b1f;
+    background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent-color) 100%);
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(254, 127, 45, 0.3);
+    box-shadow: var(--shadow-lg), 0 0 20px rgba(254, 127, 45, 0.3);
 }
 
 .btn-secondary {
     background-color: transparent;
     color: var(--primary-color);
     border: 2px solid var(--primary-color);
+    box-shadow: var(--shadow-sm);
 }
 
 .btn-secondary:hover {
     background-color: var(--primary-color);
-    color: white;
+    color: var(--text-white);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
 }
 
 .btn-outline {
@@ -45,7 +52,9 @@
 
 .btn-outline:hover {
     background-color: var(--accent-color);
-    color: white;
+    color: var(--text-white);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
 }
 
 .btn-large {
@@ -58,19 +67,20 @@
     font-size: 0.875rem;
 }
 
-/* Card Components */
+/* Enhanced Card Components - Standardized Design System */
 .card {
-    background: white;
-    border-radius: 1rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-    border: 1px solid #f1f5f9;
+    background: var(--bg-white);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--secondary-color);
     overflow: hidden;
-    transition: all 0.3s ease;
+    transition: all var(--transition-normal);
 }
 
 .card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--accent-color);
 }
 
 .card-header {
@@ -129,40 +139,43 @@
     color: white;
 }
 
-/* Form Components */
+/* Enhanced Form Components - Standardized Design System */
 .form-group {
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--space-lg);
 }
 
 .form-label {
     display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
+    margin-bottom: var(--space-sm);
+    font-weight: var(--font-weight-semibold);
     color: var(--text-primary);
+    font-family: var(--font-primary);
 }
 
 .form-input {
     width: 100%;
-    padding: 0.75rem 1rem;
-    border: 2px solid #e5e7eb;
-    border-radius: 0.5rem;
+    padding: var(--space-md);
+    border: 2px solid var(--secondary-color);
+    border-radius: var(--radius-md);
     font-size: 1rem;
-    transition: all 0.3s ease;
-    background-color: white;
+    transition: all var(--transition-fast);
+    background-color: var(--bg-white);
+    font-family: var(--font-primary);
+    box-shadow: var(--shadow-sm);
 }
 
 .form-input:focus {
     outline: none;
     border-color: var(--accent-color);
-    box-shadow: 0 0 0 3px rgba(254, 127, 45, 0.1);
+    box-shadow: 0 0 0 3px rgba(254, 127, 45, 0.1), var(--shadow-md);
 }
 
 .form-input:invalid {
-    border-color: #ef4444;
+    border-color: var(--error-color);
 }
 
 .form-input:invalid:focus {
-    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1), var(--shadow-md);
 }
 
 .form-textarea {

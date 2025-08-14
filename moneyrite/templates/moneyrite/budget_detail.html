@@ -1,0 +1,337 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ budget.name }} - Budget Detail - MoneyRite{% endblock %}
+
+{% block extra_head %}
+<style>
+    .moneyrite-hero {
+        background: linear-gradient(135deg, var(--primary-color) 0%, #1a2d3a 100%);
+        color: white;
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+    }
+    
+    .budget-card {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e5e7eb;
+    }
+    
+    .summary-card {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 1.5rem;
+        border: 1px solid #e2e8f0;
+    }
+    
+    .expense-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 0;
+        border-bottom: 1px solid #e5e7eb;
+    }
+    
+    .expense-item:last-child {
+        border-bottom: none;
+    }
+    
+    .expense-category {
+        font-weight: 500;
+    }
+    
+    .expense-amount {
+        font-weight: 600;
+        color: var(--primary-color);
+    }
+    
+    .balance-positive {
+        color: #059669;
+    }
+    
+    .balance-negative {
+        color: #dc2626;
+    }
+    
+    .progress-bar {
+        width: 100%;
+        height: 8px;
+        background: #e5e7eb;
+        border-radius: 4px;
+        overflow: hidden;
+        margin-top: 0.5rem;
+    }
+    
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #10b981, #059669);
+        transition: width 0.3s ease;
+    }
+    
+    @media (max-width: 768px) {
+        .budget-card {
+            padding: 1.5rem;
+        }
+        
+        .summary-card {
+            padding: 1rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- MoneyRite Hero Section -->
+<div class="moneyrite-hero">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+            <h1 class="text-3xl md:text-4xl font-bold mb-4">{{ budget.name }}</h1>
+            <p class="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto">
+                Detailed view of your budget plan and expense breakdown.
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+    <!-- Action Bar -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+        <div class="flex items-center space-x-4">
+            <a href="{% url 'moneyrite:budget_planner' %}" class="text-accent hover:underline">
+                ← Back to Budget Planner
+            </a>
+        </div>
+        <div class="flex space-x-3">
+            <a href="{% url 'moneyrite:edit_budget' budget.id %}" class="btn btn-outline">
+                Edit Budget
+            </a>
+            <a href="{% url 'moneyrite:delete_budget' budget.id %}" class="btn btn-outline text-red-600 border-red-600 hover:bg-red-600 hover:text-white">
+                Delete Budget
+            </a>
+        </div>
+    </div>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Budget Summary -->
+        <div class="lg:col-span-1">
+            <div class="summary-card">
+                <h2 class="text-xl font-semibold mb-4">Budget Summary</h2>
+                
+                <div class="space-y-4">
+                    <div class="text-center p-4 bg-white rounded-lg">
+                        <div class="text-2xl font-bold text-primary">R{{ budget.monthly_income|floatformat:2 }}</div>
+                        <div class="text-sm text-gray-600">Monthly Income</div>
+                    </div>
+                    
+                    <div class="text-center p-4 bg-white rounded-lg">
+                        <div class="text-2xl font-bold text-gray-700">R{{ budget.total_expenses|floatformat:2 }}</div>
+                        <div class="text-sm text-gray-600">Total Expenses</div>
+                    </div>
+                    
+                    <div class="text-center p-4 bg-white rounded-lg">
+                        <div class="text-2xl font-bold {% if budget.remaining_balance < 0 %}balance-negative{% else %}balance-positive{% endif %}">
+                            R{{ budget.remaining_balance|floatformat:2 }}
+                        </div>
+                        <div class="text-sm text-gray-600">Remaining Balance</div>
+                    </div>
+                </div>
+                
+                <!-- Budget Health -->
+                <div class="mt-6">
+                    <h3 class="font-semibold mb-2">Budget Health</h3>
+                    {% if budget.remaining_balance >= 0 %}
+                        <div class="text-green-600 text-sm">
+                            ✅ Your budget is balanced! You have R{{ budget.remaining_balance|floatformat:2 }} left over.
+                        </div>
+                    {% else %}
+                        <div class="text-red-600 text-sm">
+                            ⚠️ You're overspending by R{{ budget.remaining_balance|floatformat:2|slice:"1:" }}. Consider reducing expenses.
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Expense Percentage -->
+                <div class="mt-6">
+                    <h3 class="font-semibold mb-2">Expense Ratio</h3>
+                    <div class="text-sm text-gray-600 mb-1">
+                        {% widthratio budget.total_expenses budget.monthly_income 100 as expense_ratio %}
+                        {{ expense_ratio|floatformat:0 }}% of income spent
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: {{ expense_ratio }}%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Detailed Expenses -->
+        <div class="lg:col-span-2">
+            <div class="budget-card">
+                <h2 class="text-2xl font-bold text-primary mb-6">Expense Breakdown</h2>
+                
+                <!-- Essential Expenses -->
+                <div class="mb-8">
+                    <h3 class="text-lg font-semibold mb-4 text-red-600">🏠 Essential Expenses</h3>
+                    <div class="space-y-2">
+                        {% if budget.housing_rent_bond > 0 %}
+                        <div class="expense-item">
+                            <span class="expense-category">Housing (Rent/Bond)</span>
+                            <span class="expense-amount">R{{ budget.housing_rent_bond|floatformat:2 }}</span>
+                        </div>
+                        {% endif %}
+                        
+                        {% if budget.groceries_household > 0 %}
+                        <div class="expense-item">
+                            <span class="expense-category">Groceries & Household</span>
+                            <span class="expense-amount">R{{ budget.groceries_household|floatformat:2 }}</span>
+                        </div>
+                        {% endif %}
+                        
+                        {% if budget.utilities_water_electricity > 0 %}
+                        <div class="expense-item">
+                            <span class="expense-category">Utilities (Water/Electricity)</span>
+                            <span class="expense-amount">R{{ budget.utilities_water_electricity|floatformat:2 }}</span>
+                        </div>
+                        {% endif %}
+                        
+                        {% if budget.transport_fuel_taxi > 0 %}
+                        <div class="expense-item">
+                            <span class="expense-category">Transport (Fuel/Taxi)</span>
+                            <span class="expense-amount">R{{ budget.transport_fuel_taxi|floatformat:2 }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="mt-3 pt-3 border-t">
+                        <div class="flex justify-between font-semibold">
+                            <span>Essential Total:</span>
+                            <span>R{{ budget.housing_rent_bond|add:budget.groceries_household|add:budget.utilities_water_electricity|add:budget.transport_fuel_taxi|floatformat:2 }}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Important Expenses -->
+                <div class="mb-8">
+                    <h3 class="text-lg font-semibold mb-4 text-blue-600">📚 Important Expenses</h3>
+                    <div class="space-y-2">
+                        {% if budget.education_school_fees > 0 %}
+                        <div class="expense-item">
+                            <span class="expense-category">Education (School Fees)</span>
+                            <span class="expense-amount">R{{ budget.education_school_fees|floatformat:2 }}</span>
+                        </div>
+                        {% endif %}
+                        
+                        {% if budget.healthcare_medical > 0 %}
+                        <div class="expense-item">
+                            <span class="expense-category">Healthcare/Medical</span>
+                            <span class="expense-amount">R{{ budget.healthcare_medical|floatformat:2 }}</span>
+                        </div>
+                        {% endif %}
+                        
+                        {% if budget.family_black_tax > 0 %}
+                        <div class="expense-item">
+                            <span class="expense-category">Family Support (Black Tax)</span>
+                            <span class="expense-amount">R{{ budget.family_black_tax|floatformat:2 }}</span>
+                        </div>
+                        {% endif %}
+                        
+                        {% if budget.insurance > 0 %}
+                        <div class="expense-item">
+                            <span class="expense-category">Insurance</span>
+                            <span class="expense-amount">R{{ budget.insurance|floatformat:2 }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="mt-3 pt-3 border-t">
+                        <div class="flex justify-between font-semibold">
+                            <span>Important Total:</span>
+                            <span>R{{ budget.education_school_fees|add:budget.healthcare_medical|add:budget.family_black_tax|add:budget.insurance|floatformat:2 }}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Financial Obligations -->
+                <div class="mb-8">
+                    <h3 class="text-lg font-semibold mb-4 text-yellow-600">💳 Financial Obligations</h3>
+                    <div class="space-y-2">
+                        {% if budget.loan_repayments > 0 %}
+                        <div class="expense-item">
+                            <span class="expense-category">Loan Repayments</span>
+                            <span class="expense-amount">R{{ budget.loan_repayments|floatformat:2 }}</span>
+                        </div>
+                        {% endif %}
+                        
+                        {% if budget.savings_investments > 0 %}
+                        <div class="expense-item">
+                            <span class="expense-category">Savings & Investments</span>
+                            <span class="expense-amount">R{{ budget.savings_investments|floatformat:2 }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="mt-3 pt-3 border-t">
+                        <div class="flex justify-between font-semibold">
+                            <span>Financial Total:</span>
+                            <span>R{{ budget.loan_repayments|add:budget.savings_investments|floatformat:2 }}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Lifestyle Expenses -->
+                <div class="mb-8">
+                    <h3 class="text-lg font-semibold mb-4 text-green-600">🎉 Lifestyle & Other</h3>
+                    <div class="space-y-2">
+                        {% if budget.entertainment_lifestyle > 0 %}
+                        <div class="expense-item">
+                            <span class="expense-category">Entertainment & Lifestyle</span>
+                            <span class="expense-amount">R{{ budget.entertainment_lifestyle|floatformat:2 }}</span>
+                        </div>
+                        {% endif %}
+                        
+                        {% if budget.other_expenses > 0 %}
+                        <div class="expense-item">
+                            <span class="expense-category">Other Expenses</span>
+                            <span class="expense-amount">R{{ budget.other_expenses|floatformat:2 }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="mt-3 pt-3 border-t">
+                        <div class="flex justify-between font-semibold">
+                            <span>Lifestyle Total:</span>
+                            <span>R{{ budget.entertainment_lifestyle|add:budget.other_expenses|floatformat:2 }}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Grand Total -->
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <div class="flex justify-between items-center text-xl font-bold">
+                        <span>Total Monthly Expenses:</span>
+                        <span class="text-primary">R{{ budget.total_expenses|floatformat:2 }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Budget Tips -->
+    <div class="mt-12 bg-blue-50 rounded-lg p-6">
+        <h3 class="text-lg font-semibold text-blue-900 mb-4">💡 Budget Optimization Tips</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-blue-800">
+            <div>
+                <strong>50/30/20 Rule:</strong> Aim for 50% needs, 30% wants, 20% savings and debt repayment.
+            </div>
+            <div>
+                <strong>Emergency Fund:</strong> Build 3-6 months of expenses for unexpected situations.
+            </div>
+            <div>
+                <strong>Review Monthly:</strong> Update your budget based on actual spending patterns.
+            </div>
+            <div>
+                <strong>Track Progress:</strong> Monitor your spending to stay within budget limits.
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

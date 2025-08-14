@@ -24,6 +24,7 @@ urlpatterns = [
     path("", include("jobs.urls")),
     path("users/", include("users.urls")),
     path("blog/", include("blog.urls")),
+    path("moneyrite/", include("moneyrite.urls")),
 ]
 
 # Serve media files during development

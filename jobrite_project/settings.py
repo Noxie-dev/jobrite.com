@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "jobs",
     "users",
     "blog",
+    "moneyrite",
 ]
 
 MIDDLEWARE = [

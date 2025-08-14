@@ -1,37 +1,37 @@
-/* JobRite.com Hero Section - Complete Design Implementation */
+/* JobRite.com Hero Section - Enhanced Design Implementation */
 
-/* CSS Custom Properties following design specification */
+/* Hero-specific CSS Custom Properties - Inherits from main.css design system */
 :root {
-    /* Primary Colors */
-    --primary-bg: #F3EFF5;
-    --primary-text: #233D4D;
-    --accent-primary: #FE7F2D;
-    
-    /* Secondary Colors */
-    --bg-gradient-start: #F3EFF5;
-    --bg-gradient-end: #e8e2eb;
-    --accent-secondary: #ff6b1a;
-    --accent-tertiary: #ff8c42;
-    
-    /* Transparency Variations */
-    --glass-bg: rgba(255, 255, 255, 0.05);
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --text-overlay: rgba(35, 61, 77, 0.6);
-    --accent-overlay: rgba(254, 127, 45, 0.8);
-    
-    /* Particle Color System */
-    --particle-base: rgba(35, 61, 77, 0.6);
-    --particle-highlight: rgba(254, 127, 45, 0.8);
-    --particle-attracted: #233D4D;
-    --particle-attracted-highlight: #FE7F2D;
-    
-    /* Typography */
-    --font-primary: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    
-    /* Shadows */
-    --shadow-soft: 0 25px 45px rgba(35, 61, 77, 0.1);
-    --shadow-medium: 0 15px 35px rgba(35, 61, 77, 0.15);
-    --shadow-strong: 0 25px 50px rgba(35, 61, 77, 0.2);
+    /* Hero Background System - Navy Theme */
+    --hero-bg-primary: var(--primary-color);        /* Navy blue background */
+    --hero-bg-secondary: var(--primary-dark);       /* Darker navy for gradients */
+    --hero-bg-gradient-start: var(--primary-color); /* #233D4D */
+    --hero-bg-gradient-end: var(--primary-dark);    /* #1a2d3a */
+
+    /* Hero Text Colors - White on Navy */
+    --hero-text-primary: var(--text-white);         /* White text for contrast */
+    --hero-text-secondary: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
+    --hero-text-accent: var(--accent-color);        /* Orange accent remains */
+
+    /* Hero Glass Effects - Adjusted for dark background */
+    --hero-glass-bg: rgba(255, 255, 255, 0.1);      /* Light glass on dark */
+    --hero-glass-border: rgba(255, 255, 255, 0.2);  /* Light border on dark */
+    --hero-glass-shadow: rgba(0, 0, 0, 0.3);        /* Darker shadows */
+
+    /* Hero Card Background - Navy with transparency */
+    --hero-card-bg: rgba(35, 61, 77, 0.95);         /* Semi-transparent navy */
+    --hero-card-border: rgba(255, 255, 255, 0.1);   /* Light border */
+
+    /* Particle System - Adjusted for dark background */
+    --hero-particle-base: rgba(255, 255, 255, 0.3);     /* Light particles */
+    --hero-particle-highlight: var(--accent-color);      /* Orange highlights */
+    --hero-particle-attracted: var(--text-white);        /* White attracted particles */
+
+    /* Hero Shadows - Enhanced for dark theme */
+    --hero-shadow-soft: 0 25px 45px rgba(0, 0, 0, 0.2);
+    --hero-shadow-medium: 0 15px 35px rgba(0, 0, 0, 0.25);
+    --hero-shadow-strong: 0 25px 50px rgba(0, 0, 0, 0.3);
+    --hero-shadow-glow: 0 0 30px rgba(254, 127, 45, 0.2); /* Orange glow effect */
 }
 
 /* Modern CSS reset for hero section - Override main.css styles */
@@ -55,7 +55,7 @@
     opacity: 1 !important;
 }
 
-/* Override main.css hero section styles with higher specificity */
+/* Enhanced Hero Section - Navy Background Theme */
 body .hero-section {
     position: relative !important;
     width: 100vw !important;
@@ -67,11 +67,14 @@ body .hero-section {
     text-align: center !important;
     padding: 60px 40px !important;
     overflow: hidden !important;
-    background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%) !important;
-    /* Professional gradient mesh overlay */
-    background-image: 
-        radial-gradient(circle at 25% 75%, rgba(35, 61, 77, 0.08) 0%, transparent 50%),
-        radial-gradient(circle at 75% 25%, rgba(254, 127, 45, 0.05) 0%, transparent 50%),
+
+    /* Navy gradient background with depth */
+    background: linear-gradient(135deg, var(--hero-bg-gradient-start) 0%, var(--hero-bg-gradient-end) 100%) !important;
+
+    /* Enhanced gradient mesh overlay for visual depth */
+    background-image:
+        radial-gradient(circle at 25% 75%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 75% 25%, rgba(254, 127, 45, 0.08) 0%, transparent 50%),
         radial-gradient(circle at 50% 50%, rgba(243, 239, 245, 0.15) 0%, transparent 50%) !important;
 }
 
@@ -172,41 +175,41 @@ body .hero-section {
    UNIFIED HERO CARD DESIGN
    ===================================*/
 
-/* Main Hero Container - Single Full-Width Card */
+/* Main Hero Container - Navy Theme Card */
 .hero-unified-card {
     position: relative !important;
     z-index: 10 !important;
     width: 100% !important;
     max-width: 1200px !important;
     margin: 0 auto !important;
-    
-    /* Single unified card styling */
-    background: rgba(255, 255, 255, 0.95) !important;
+
+    /* Navy-themed card styling with glass effect */
+    background: var(--hero-card-bg) !important;
     backdrop-filter: blur(20px) !important;
     -webkit-backdrop-filter: blur(20px) !important;
-    border-radius: 30px !important;
-    box-shadow: 0 25px 60px rgba(35, 61, 77, 0.15) !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    
+    border-radius: var(--radius-2xl) !important;
+    box-shadow: var(--hero-shadow-strong), var(--hero-shadow-glow) !important;
+    border: 1px solid var(--hero-card-border) !important;
+
     /* Layout - horizontal flex */
     display: flex !important;
     align-items: center !important;
     gap: 0 !important;
-    
+
     /* Professional spacing */
-    padding: 50px !important;
-    
+    padding: var(--space-3xl) !important;
+
     /* Smooth entrance animation */
     animation: slideUpUnified 1.2s ease-out !important;
-    
-    /* Hover enhancement */
-    transition: all 0.4s ease !important;
+
+    /* Enhanced hover effects */
+    transition: all var(--transition-normal) !important;
 }
 
 .hero-unified-card:hover {
-    transform: translateY(-5px) !important;
-    box-shadow: 0 35px 70px rgba(35, 61, 77, 0.2) !important;
-    border-color: rgba(254, 127, 45, 0.3) !important;
+    transform: translateY(-8px) scale(1.02) !important;
+    box-shadow: var(--hero-shadow-strong), 0 0 40px rgba(254, 127, 45, 0.3) !important;
+    border-color: rgba(254, 127, 45, 0.4) !important;
 }
 
 @keyframes slideUpUnified {
@@ -230,40 +233,40 @@ body .hero-section {
     flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: 20px !important;
+    gap: var(--space-lg) !important;
     text-align: center !important;
-    border-right: 1px solid rgba(35, 61, 77, 0.1) !important;
-    padding-right: 40px !important;
-    margin-right: 40px !important;
+    border-right: 1px solid var(--hero-glass-border) !important;
+    padding-right: var(--space-2xl) !important;
+    margin-right: var(--space-2xl) !important;
 }
 
 .brand-logo-container {
     position: relative !important;
-    padding: 20px !important;
-    border-radius: 20px !important;
-    background: rgba(254, 127, 45, 0.05) !important;
-    backdrop-filter: blur(10px) !important;
-    border: 2px solid rgba(254, 127, 45, 0.1) !important;
-    transition: all 0.3s ease !important;
+    padding: var(--space-lg) !important;
+    border-radius: var(--radius-xl) !important;
+    background: var(--hero-glass-bg) !important;
+    backdrop-filter: blur(15px) !important;
+    border: 2px solid var(--hero-glass-border) !important;
+    transition: all var(--transition-normal) !important;
     animation: brandLogoFadeIn 1.5s ease-out 0.5s both !important;
 }
 
 .brand-logo-container:hover {
-    transform: scale(1.05) !important;
-    border-color: rgba(254, 127, 45, 0.3) !important;
+    transform: scale(1.05) translateY(-5px) !important;
+    border-color: rgba(254, 127, 45, 0.4) !important;
     background: rgba(254, 127, 45, 0.1) !important;
-    box-shadow: 0 15px 30px rgba(254, 127, 45, 0.2) !important;
+    box-shadow: var(--hero-shadow-glow) !important;
 }
 
 .brand-logo {
     width: 120px !important;
     height: auto !important;
-    filter: drop-shadow(0 5px 15px rgba(35, 61, 77, 0.1)) !important;
-    transition: all 0.3s ease !important;
+    filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.2)) !important;
+    transition: all var(--transition-normal) !important;
 }
 
 .brand-logo-container:hover .brand-logo {
-    filter: drop-shadow(0 8px 20px rgba(254, 127, 45, 0.3)) !important;
+    filter: drop-shadow(0 8px 25px rgba(254, 127, 45, 0.4)) !important;
 }
 
 .brand-name {
@@ -272,23 +275,24 @@ body .hero-section {
 
 .brand-title {
     font-size: 2.2rem !important;
-    font-weight: 800 !important;
-    color: var(--primary-text) !important;
-    margin: 0 0 8px 0 !important;
+    font-weight: var(--font-weight-extrabold) !important;
+    color: var(--hero-text-primary) !important;
+    margin: 0 0 var(--space-sm) 0 !important;
     letter-spacing: -0.02em !important;
     line-height: 1.1 !important;
-    text-shadow: 2px 2px 4px rgba(35, 61, 77, 0.1) !important;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3) !important;
     font-family: var(--font-primary) !important;
 }
 
 .brand-tagline {
     font-size: 1rem !important;
-    font-weight: 500 !important;
-    color: var(--accent-primary) !important;
+    font-weight: var(--font-weight-medium) !important;
+    color: var(--hero-text-accent) !important;
     margin: 0 !important;
-    opacity: 0.9 !important;
+    opacity: 0.95 !important;
     letter-spacing: 0.02em !important;
     font-family: var(--font-primary) !important;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2) !important;
 }
 
 @keyframes brandLogoFadeIn {
@@ -333,22 +337,22 @@ body .hero-section {
 
 .hero-subtitle {
     font-size: 1.1rem !important;
-    font-weight: 400 !important;
+    font-weight: var(--font-weight-normal) !important;
     line-height: 1.6 !important;
-    color: var(--primary-text) !important;
-    opacity: 0.85 !important;
-    margin: 0 0 15px 0 !important;
+    color: var(--hero-text-secondary) !important;
+    margin: 0 0 var(--space-md) 0 !important;
     font-family: var(--font-primary) !important;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2) !important;
 }
 
 .hero-tagline {
     font-size: 2.5rem !important;
-    font-weight: 700 !important;
+    font-weight: var(--font-weight-bold) !important;
     line-height: 1.2 !important;
-    color: var(--accent-primary) !important;
+    color: var(--hero-text-accent) !important;
     margin: 0 !important;
     letter-spacing: -0.02em !important;
-    text-shadow: 2px 2px 6px rgba(254, 127, 45, 0.1) !important;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3) !important;
     font-family: var(--font-primary) !important;
 }
 
@@ -396,37 +400,42 @@ body .hero-section {
     outline: none !important;
     padding: 18px 25px !important;
     font-size: 1.05rem !important;
-    font-weight: 400 !important;
-    color: var(--primary-text) !important;
-    background: transparent !important;
-    border-radius: 55px !important;
+    font-weight: var(--font-weight-normal) !important;
+    color: var(--text-primary) !important;
+    background: var(--bg-white) !important;
+    border-radius: var(--radius-full) !important;
     font-family: var(--font-primary) !important;
+    transition: all var(--transition-fast) !important;
+}
+
+.unified-search-input:focus {
+    box-shadow: 0 0 0 3px rgba(254, 127, 45, 0.2) !important;
 }
 
 .unified-search-input::placeholder {
-    color: rgba(35, 61, 77, 0.5) !important;
-    font-weight: 400 !important;
+    color: var(--text-secondary) !important;
+    font-weight: var(--font-weight-normal) !important;
 }
 
 .unified-search-btn {
-    background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%) !important;
+    background: linear-gradient(135deg, var(--accent-color) 0%, var(--accent-dark) 100%) !important;
     border: none !important;
-    border-radius: 50px !important;
+    border-radius: var(--radius-full) !important;
     padding: 18px 32px !important;
-    color: white !important;
+    color: var(--text-white) !important;
     font-size: 1.05rem !important;
-    font-weight: 600 !important;
+    font-weight: var(--font-weight-semibold) !important;
     cursor: pointer !important;
-    transition: all 0.3s ease !important;
-    box-shadow: 0 5px 15px rgba(254, 127, 45, 0.25) !important;
+    transition: all var(--transition-normal) !important;
+    box-shadow: var(--shadow-lg), 0 0 20px rgba(254, 127, 45, 0.3) !important;
     font-family: var(--font-primary) !important;
     white-space: nowrap !important;
 }
 
 .unified-search-btn:hover {
-    transform: translateY(-2px) scale(1.02) !important;
-    box-shadow: 0 8px 20px rgba(254, 127, 45, 0.35) !important;
-    background: linear-gradient(135deg, var(--accent-secondary) 0%, var(--accent-primary) 100%) !important;
+    transform: translateY(-3px) scale(1.05) !important;
+    box-shadow: var(--shadow-xl), 0 0 30px rgba(254, 127, 45, 0.4) !important;
+    background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent-color) 100%) !important;
 }
 
 @keyframes secondaryContentSlideIn {
@@ -448,43 +457,43 @@ body .hero-section {
 .unified-stats-container {
     display: flex !important;
     justify-content: flex-start !important;
-    gap: 30px !important;
+    gap: var(--space-2xl) !important;
     flex-wrap: wrap !important;
 }
 
 .unified-stat-item {
     text-align: center !important;
-    padding: 15px 20px !important;
-    border-radius: 12px !important;
-    background: rgba(254, 127, 45, 0.05) !important;
-    backdrop-filter: blur(5px) !important;
-    transition: all 0.3s ease !important;
-    border: 1px solid rgba(254, 127, 45, 0.1) !important;
+    padding: var(--space-md) var(--space-lg) !important;
+    border-radius: var(--radius-lg) !important;
+    background: var(--hero-glass-bg) !important;
+    backdrop-filter: blur(10px) !important;
+    transition: all var(--transition-normal) !important;
+    border: 1px solid var(--hero-glass-border) !important;
     min-width: 100px !important;
 }
 
 .unified-stat-item:hover {
-    transform: translateY(-3px) !important;
-    background: rgba(254, 127, 45, 0.1) !important;
-    border-color: rgba(254, 127, 45, 0.2) !important;
-    box-shadow: 0 8px 20px rgba(254, 127, 45, 0.15) !important;
+    transform: translateY(-3px) scale(1.05) !important;
+    background: rgba(254, 127, 45, 0.15) !important;
+    border-color: rgba(254, 127, 45, 0.3) !important;
+    box-shadow: var(--hero-shadow-glow) !important;
 }
 
 .unified-stat-number {
     font-size: 1.4rem !important;
-    font-weight: 700 !important;
-    color: var(--accent-primary) !important;
+    font-weight: var(--font-weight-bold) !important;
+    color: var(--hero-text-accent) !important;
     display: block !important;
     line-height: 1.1 !important;
     font-family: var(--font-primary) !important;
-    margin-bottom: 4px !important;
+    margin-bottom: var(--space-xs) !important;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2) !important;
 }
 
 .unified-stat-label {
     font-size: 0.75rem !important;
-    font-weight: 500 !important;
-    color: var(--primary-text) !important;
-    opacity: 0.7 !important;
+    font-weight: var(--font-weight-medium) !important;
+    color: var(--hero-text-secondary) !important;
     text-transform: uppercase !important;
     letter-spacing: 0.5px !important;
     font-family: var(--font-primary) !important;

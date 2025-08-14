@@ -1,0 +1,234 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Budget Planner - MoneyRite{% endblock %}
+
+{% block extra_head %}
+<style>
+    .moneyrite-hero {
+        background: linear-gradient(135deg, var(--primary-color) 0%, #1a2d3a 100%);
+        color: white;
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+    }
+    
+    .budget-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e5e7eb;
+        transition: all 0.3s ease;
+    }
+    
+    .budget-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+    }
+    
+    .budget-summary {
+        background: #f8fafc;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .balance-positive {
+        color: #059669;
+    }
+    
+    .balance-negative {
+        color: #dc2626;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 3rem 1rem;
+        color: #6b7280;
+    }
+    
+    @media (max-width: 768px) {
+        .budget-card {
+            padding: 1rem;
+        }
+        
+        .moneyrite-hero {
+            padding: 1.5rem 0;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- MoneyRite Hero Section -->
+<div class="moneyrite-hero">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+            <h1 class="text-3xl md:text-4xl font-bold mb-4">Budget Planner</h1>
+            <p class="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto">
+                Plan your monthly expenses with South African categories including family support and black tax.
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+    <!-- Action Bar -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+        <h2 class="text-2xl font-bold text-primary">Your Budget Plans</h2>
+        <a href="{% url 'moneyrite:create_budget' %}" class="btn btn-primary">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            Create New Budget
+        </a>
+    </div>
+    
+    {% if budgets %}
+        <!-- Budget Plans Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for budget in budgets %}
+            <div class="budget-card">
+                <div class="flex justify-between items-start mb-4">
+                    <h3 class="text-xl font-semibold">{{ budget.name }}</h3>
+                    <div class="flex space-x-2">
+                        <a href="{% url 'moneyrite:edit_budget' budget.id %}" class="text-gray-500 hover:text-accent">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                            </svg>
+                        </a>
+                        <a href="{% url 'moneyrite:delete_budget' budget.id %}" class="text-gray-500 hover:text-red-600">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="budget-summary">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-sm text-gray-600">Monthly Income</span>
+                        <span class="font-medium">R{{ budget.monthly_income|floatformat:2 }}</span>
+                    </div>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-sm text-gray-600">Total Expenses</span>
+                        <span class="font-medium">R{{ budget.total_expenses|floatformat:2 }}</span>
+                    </div>
+                    <div class="flex justify-between items-center pt-2 border-t">
+                        <span class="text-sm font-semibold">Remaining Balance</span>
+                        <span class="font-bold {% if budget.remaining_balance < 0 %}balance-negative{% else %}balance-positive{% endif %}">
+                            R{{ budget.remaining_balance|floatformat:2 }}
+                        </span>
+                    </div>
+                </div>
+                
+                <!-- Top Expenses -->
+                <div class="space-y-2">
+                    <h4 class="text-sm font-semibold text-gray-700">Top Expenses</h4>
+                    {% if budget.housing_rent_bond > 0 %}
+                    <div class="flex justify-between text-sm">
+                        <span>Housing</span>
+                        <span>R{{ budget.housing_rent_bond|floatformat:2 }}</span>
+                    </div>
+                    {% endif %}
+                    {% if budget.groceries_household > 0 %}
+                    <div class="flex justify-between text-sm">
+                        <span>Groceries</span>
+                        <span>R{{ budget.groceries_household|floatformat:2 }}</span>
+                    </div>
+                    {% endif %}
+                    {% if budget.transport_fuel_taxi > 0 %}
+                    <div class="flex justify-between text-sm">
+                        <span>Transport</span>
+                        <span>R{{ budget.transport_fuel_taxi|floatformat:2 }}</span>
+                    </div>
+                    {% endif %}
+                    {% if budget.family_black_tax > 0 %}
+                    <div class="flex justify-between text-sm">
+                        <span>Family Support</span>
+                        <span>R{{ budget.family_black_tax|floatformat:2 }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="mt-4 pt-4 border-t">
+                    <a href="{% url 'moneyrite:budget_detail' budget.id %}" class="text-accent hover:underline font-medium">
+                        View Details →
+                    </a>
+                </div>
+                
+                <div class="text-xs text-gray-500 mt-2">
+                    Updated {{ budget.updated_at|timesince }} ago
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Budget Tips -->
+        <div class="mt-12 bg-blue-50 rounded-lg p-6">
+            <h3 class="text-lg font-semibold text-blue-900 mb-4">💡 Budgeting Tips for South Africans</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-blue-800">
+                <div>
+                    <strong>50/30/20 Rule:</strong> Allocate 50% to needs (housing, groceries), 30% to wants (entertainment), and 20% to savings and debt repayment.
+                </div>
+                <div>
+                    <strong>Emergency Fund:</strong> Aim to save 3-6 months of expenses for unexpected situations like job loss or medical emergencies.
+                </div>
+                <div>
+                    <strong>Family Support:</strong> Budget realistically for family support (black tax) - it's a common expense in South African households.
+                </div>
+                <div>
+                    <strong>Track Spending:</strong> Review your budget monthly and adjust categories based on actual spending patterns.
+                </div>
+            </div>
+        </div>
+        
+    {% else %}
+        <!-- Empty State -->
+        <div class="empty-state">
+            <svg class="w-24 h-24 mx-auto mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg>
+            <h3 class="text-xl font-semibold mb-4">No Budget Plans Yet</h3>
+            <p class="text-gray-600 mb-6 max-w-md mx-auto">
+                Create your first budget plan to start tracking your income and expenses. 
+                Our South African-focused categories will help you plan effectively.
+            </p>
+            <a href="{% url 'moneyrite:create_budget' %}" class="btn btn-primary">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                Create Your First Budget
+            </a>
+        </div>
+        
+        <!-- Getting Started Tips -->
+        <div class="mt-12 bg-gray-50 rounded-lg p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">🚀 Getting Started with Budgeting</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-accent rounded-full flex items-center justify-center mx-auto mb-3">
+                        <span class="text-white font-bold">1</span>
+                    </div>
+                    <h4 class="font-semibold mb-2">Calculate Your Income</h4>
+                    <p class="text-sm text-gray-600">Use our salary calculator to determine your net monthly income after tax and deductions.</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-accent rounded-full flex items-center justify-center mx-auto mb-3">
+                        <span class="text-white font-bold">2</span>
+                    </div>
+                    <h4 class="font-semibold mb-2">List Your Expenses</h4>
+                    <p class="text-sm text-gray-600">Include all expenses: housing, groceries, transport, family support, and entertainment.</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-accent rounded-full flex items-center justify-center mx-auto mb-3">
+                        <span class="text-white font-bold">3</span>
+                    </div>
+                    <h4 class="font-semibold mb-2">Track & Adjust</h4>
+                    <p class="text-sm text-gray-600">Monitor your spending and adjust your budget monthly to stay on track with your goals.</p>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,279 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ page_title }} - {{ debt.account_name }} - MoneyRite{% endblock %}
+
+{% block extra_head %}
+<style>
+    .moneyrite-hero {
+        background: linear-gradient(135deg, var(--primary-color) 0%, #1a2d3a 100%);
+        color: white;
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+    }
+    
+    .form-card {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e5e7eb;
+    }
+    
+    .debt-info {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e5e7eb;
+        position: sticky;
+        top: 2rem;
+    }
+    
+    .info-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.75rem;
+    }
+    
+    .info-item:last-child {
+        margin-bottom: 0;
+    }
+    
+    .payment-preview {
+        background: #ecfdf5;
+        border: 1px solid #10b981;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-top: 1rem;
+    }
+    
+    .preview-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+    }
+    
+    .preview-item:last-child {
+        margin-bottom: 0;
+        font-weight: 600;
+        border-top: 1px solid #10b981;
+        padding-top: 0.5rem;
+        margin-top: 0.5rem;
+    }
+    
+    @media (max-width: 1024px) {
+        .debt-info {
+            position: static;
+            margin-top: 2rem;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .form-card {
+            padding: 1.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- MoneyRite Hero Section -->
+<div class="moneyrite-hero">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+            <h1 class="text-3xl md:text-4xl font-bold mb-4">{{ page_title }}</h1>
+            <p class="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto">
+                Record a payment for {{ debt.account_name }}.
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Payment Form -->
+        <div class="lg:col-span-2">
+            <div class="form-card">
+                <h2 class="text-2xl font-bold text-primary mb-6">Payment Details</h2>
+                
+                <form method="post" id="payment-form">
+                    {% csrf_token %}
+                    
+                    <!-- Payment Date -->
+                    <div class="form-group">
+                        <label for="{{ form.payment_date.id_for_label }}" class="form-label">
+                            {{ form.payment_date.label }}
+                        </label>
+                        {{ form.payment_date }}
+                        {% if form.payment_date.errors %}
+                            <div class="text-red-600 text-sm mt-1">
+                                {{ form.payment_date.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Payment Amount -->
+                    <div class="form-group">
+                        <label for="{{ form.payment_amount.id_for_label }}" class="form-label">
+                            {{ form.payment_amount.label }}
+                        </label>
+                        {{ form.payment_amount }}
+                        <div class="text-sm text-gray-600 mt-1">
+                            Suggested payment: R{{ debt.monthly_payment|floatformat:2 }}
+                        </div>
+                        {% if form.payment_amount.errors %}
+                            <div class="text-red-600 text-sm mt-1">
+                                {{ form.payment_amount.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Payment Preview -->
+                    <div class="payment-preview" id="payment-preview" style="display: none;">
+                        <h4 class="font-semibold text-green-800 mb-3">Payment Breakdown</h4>
+                        <div class="preview-item">
+                            <span>Interest Portion:</span>
+                            <span id="interest-amount">R0.00</span>
+                        </div>
+                        <div class="preview-item">
+                            <span>Principal Portion:</span>
+                            <span id="principal-amount">R0.00</span>
+                        </div>
+                        <div class="preview-item">
+                            <span>Balance After Payment:</span>
+                            <span id="balance-after">R{{ debt.current_balance|floatformat:2 }}</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Amount Buttons -->
+                    <div class="mt-6">
+                        <label class="form-label">Quick Amounts</label>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-2">
+                            <button type="button" class="btn btn-outline text-sm" onclick="setAmount({{ debt.monthly_payment }})">
+                                Monthly Payment<br>R{{ debt.monthly_payment|floatformat:2 }}
+                            </button>
+                            <button type="button" class="btn btn-outline text-sm" onclick="setAmount({{ debt.monthly_payment|add:100 }})">
+                                +R100<br>R{{ debt.monthly_payment|add:100|floatformat:2 }}
+                            </button>
+                            <button type="button" class="btn btn-outline text-sm" onclick="setAmount({{ debt.monthly_payment|add:500 }})">
+                                +R500<br>R{{ debt.monthly_payment|add:500|floatformat:2 }}
+                            </button>
+                            <button type="button" class="btn btn-outline text-sm" onclick="setAmount({{ debt.current_balance }})">
+                                Pay Off<br>R{{ debt.current_balance|floatformat:2 }}
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Form Actions -->
+                    <div class="mt-8 flex flex-col sm:flex-row gap-4">
+                        <button type="submit" class="btn btn-primary flex-1">
+                            Record Payment
+                        </button>
+                        <a href="{% url 'moneyrite:debt_detail' debt.id %}" class="btn btn-outline flex-1 text-center">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Debt Information -->
+        <div class="lg:col-span-1">
+            <div class="debt-info">
+                <h3 class="text-xl font-semibold mb-4">{{ debt.account_name }}</h3>
+                
+                <div class="space-y-3">
+                    <div class="info-item">
+                        <span class="text-gray-600">Current Balance:</span>
+                        <span class="font-semibold">R{{ debt.current_balance|floatformat:2 }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="text-gray-600">Monthly Payment:</span>
+                        <span class="font-semibold">R{{ debt.monthly_payment|floatformat:2 }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="text-gray-600">Interest Rate:</span>
+                        <span class="font-semibold">{{ debt.annual_interest_rate }}% p.a.</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="text-gray-600">Monthly Interest:</span>
+                        <span class="font-semibold text-red-600">R{{ debt.monthly_interest_amount|floatformat:2 }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="text-gray-600">Payoff Time:</span>
+                        <span class="font-semibold">
+                            {% with payoff_months=debt.payoff_months_remaining %}
+                                {% if payoff_months %}
+                                    {{ payoff_months }} months
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                            {% endwith %}
+                        </span>
+                    </div>
+                </div>
+                
+                <!-- Payment Tips -->
+                <div class="mt-6 p-3 bg-blue-50 rounded-lg">
+                    <h4 class="font-semibold text-blue-900 mb-2">💡 Payment Tips</h4>
+                    <ul class="text-sm text-blue-800 space-y-1">
+                        <li>• Pay more than the minimum to reduce interest</li>
+                        <li>• Extra payments go directly to principal</li>
+                        <li>• Consider bi-weekly payments to pay off faster</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const paymentAmountInput = document.getElementById('{{ form.payment_amount.id_for_label }}');
+    const paymentDateInput = document.getElementById('{{ form.payment_date.id_for_label }}');
+    const paymentPreview = document.getElementById('payment-preview');
+    
+    // Set default date to today
+    if (!paymentDateInput.value) {
+        const today = new Date().toISOString().split('T')[0];
+        paymentDateInput.value = today;
+    }
+    
+    // Set default amount to monthly payment
+    if (!paymentAmountInput.value) {
+        paymentAmountInput.value = {{ debt.monthly_payment }};
+        updatePaymentPreview();
+    }
+    
+    // Update preview when amount changes
+    paymentAmountInput.addEventListener('input', updatePaymentPreview);
+    
+    function updatePaymentPreview() {
+        const amount = parseFloat(paymentAmountInput.value) || 0;
+        const currentBalance = {{ debt.current_balance }};
+        const monthlyInterest = {{ debt.monthly_interest_amount }};
+        
+        if (amount > 0) {
+            const interestPortion = Math.min(amount, monthlyInterest);
+            const principalPortion = Math.max(0, amount - interestPortion);
+            const balanceAfter = Math.max(0, currentBalance - principalPortion);
+            
+            document.getElementById('interest-amount').textContent = 'R' + interestPortion.toFixed(2);
+            document.getElementById('principal-amount').textContent = 'R' + principalPortion.toFixed(2);
+            document.getElementById('balance-after').textContent = 'R' + balanceAfter.toFixed(2);
+            
+            paymentPreview.style.display = 'block';
+        } else {
+            paymentPreview.style.display = 'none';
+        }
+    }
+});
+
+function setAmount(amount) {
+    const paymentAmountInput = document.getElementById('{{ form.payment_amount.id_for_label }}');
+    paymentAmountInput.value = amount.toFixed(2);
+    paymentAmountInput.dispatchEvent(new Event('input'));
+}
+</script>
+{% endblock %}
