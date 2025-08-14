@@ -1,0 +1,444 @@
+[2025-08-14 15:30:08] INFO: 🚀 Starting safe deployment with feature flags...
+[2025-08-14 15:30:08] INFO: 🧪 Running comprehensive test suite...
+[2025-08-14 15:30:08] INFO: Running: Golden test vectors and property-based tests
+[2025-08-14 15:30:08] INFO: Command: python run_tests.py
+[2025-08-14 15:30:23] INFO: ✅ Golden test vectors and property-based tests completed successfully
+[2025-08-14 15:30:23] INFO: Output: 🚀 MoneyRite Reliability Test Suite
+Testing calculation accuracy, properties, and UI consistency
+
+============================================================
+🧪 Golden Test Vectors (SARS Accuracy)
+============================================================
+Command: python -m pytest moneyrite/tests/test_golden_vectors.py -v --tb=short
+Duration: 1.40s
+✅ PASSED
+
+Output:
+============================= test session starts ==============================
+platform darwin -- Python 3.12.3, pytest-7.4.3, pluggy-1.6.0 -- /Users/k-is-for-krwele/.pyenv/versions/3.12.3/bin/python
+cachedir: .pytest_cache
+hypothesis profile 'default'
+django: version: 5.2.5, settings: jobrite_project.settings (from env)
+rootdir: /Users/k-is-for-krwele/Documents/jobrite
+configfile: pytest.ini
+plugins: hypothesis-6.138.0, Faker-37.5.3, cov-4.1.0, asyncio-0.21.1, django-4.11.1, anyio-3.7.1
+asyncio: mode=Mode.STRICT
+collecting ... collected 32 items
+
+moneyrite/tests/test_golden_vectors.py::TestSARSGoldenVectors::test_annual_tax_calculations[annual_income0-expected_tax0-Tax-free threshold (R17,235 rebate / 18%)] PASSED [  3%]
+moneyrite/tests/test_golden_vectors.py::TestSARSGoldenVectors::test_annual_tax_calculations[annual_income1-expected_tax1-R100k - First bracket] PASSED [  6%]
+moneyrite/tests/test_golden_vectors.py::TestSARSGoldenVectors::test_annual_tax_calculations[annual_income2-expected_tax2-R150k - First bracket] PASSED [  9%]
+moneyrite/tests/test_golden_vectors.py::TestSARSGoldenVectors::test_annual_tax_calculations[annual_income3-expected_tax3-R200k - First bracket] PASSED [ 12%]
+moneyrite/tests/test_golden_vectors.py::TestSARSGoldenVectors::test_annual_tax_calculations[annual_income4-expected_tax4-R237,100 - First bracket ceiling] PASSED [ 15%]
+moneyrite/tests/test_golden_vectors.py::TestSARSGoldenVectors::test_annual_tax_calculations[annual_income5-expected_tax5-R250k - Second bracket] PASSED [ 18%]
+moneyrite/tests/test_golden_vectors.py::TestSARSGoldenVectors::test_annual_tax_calculations[annual_income6-expected_tax6-R300k - Second bracket] PASSED [ 21%]
+moneyrite/tests/test_golden_vectors.py::TestSARSGoldenVectors::test_annual_tax_calculations[annual_income7-expected_tax7-R370,500 - Second bracket ceiling] PASSED [ 25%]
+moneyrite/tests/test_golden_vectors.py::TestSARSGoldenVectors::test_annual_tax_calculations[annual_income8-expected_tax8-R400k - Third bracket] PASSED [ 28%]
+moneyrite/tests/test_golden_vectors.py::TestSARSGoldenVectors::test_annual_tax_calculations[annual_income9-expected_tax9-R500k - Third bracket] PASSED [ 31%]
+moneyrite/tests/test_golden_vectors.py::TestSARSGoldenVectors::test_annual_tax_calculations[annual_income10-expected_tax10-R512,800 - Third bracket ceiling] PASSED [ 34%]
+moneyrite/tests/test_golden_vectors.py::TestSARSGoldenVectors::test_annual_tax_calculations[annual_income11-expected_tax11-R600k - Fourth bracket] PASSED [ 37%]
+moneyrite/tests/test_golden_vectors.py::TestSARSGoldenVectors::test_annual_tax_calculations[annual_income12-expected_tax12-R673,000 - Fourth bracket ceiling] PASSED [ 40%]
+moneyrite/tests/test_golden_vectors.py::TestSARSGoldenVectors::test_annual_tax_calculations[annual_income13-expected_tax13-R750k - Fifth bracket] PASSED [ 43%]
+moneyrite/tests/test_golden_vectors.py::TestSARSGoldenVectors::test_annual_tax_calculations[annual_income14-expected_tax14-R857,900 - Fifth bracket ceiling] PASSED [ 46%]
+moneyrite/tests/test_golden_vectors.py::TestSARSGoldenVectors::test_annual_tax_calculations[annual_income15-expected_tax15-R1M - Sixth bracket] PASSED [ 50%]
+moneyrite/tests/test_golden_vectors.py::TestSARSGoldenVectors::test_annual_tax_calculations[annual_income16-expected_tax16-R1,817,000 - Sixth bracket ceiling] PASSED [ 53%]
+moneyrite/tests/test_golden_vectors.py::TestSARSGoldenVectors::test_annual_tax_calculations[annual_income17-expected_tax17-R2M - Top bracket] PASSED [ 56%]
+moneyrite/tests/test_golden_vectors.py::TestSARSGoldenVectors::test_annual_tax_calculations[annual_income18-expected_tax18-R5M - Top bracket] PASSED [ 59%]
+moneyrite/tests/test_golden_vectors.py::TestSARSGoldenVectors::test_age_based_rebates[annual_income0-under_65-expected_tax0-Under 65 - primary rebate only] PASSED [ 62%]
+moneyrite/tests/test_golden_vectors.py::TestSARSGoldenVectors::test_age_based_rebates[annual_income1-65_to_74-expected_tax1-65-74 - primary + secondary rebate] PASSED [ 65%]
+moneyrite/tests/test_golden_vectors.py::TestSARSGoldenVectors::test_age_based_rebates[annual_income2-75_plus-expected_tax2-75+ - all rebates] PASSED [ 68%]
+moneyrite/tests/test_golden_vectors.py::TestSARSGoldenVectors::test_age_based_rebates[annual_income3-under_65-expected_tax3-R500k under 65] PASSED [ 71%]
+moneyrite/tests/test_golden_vectors.py::TestSARSGoldenVectors::test_age_based_rebates[annual_income4-65_to_74-expected_tax4-R500k 65-74] PASSED [ 75%]
+moneyrite/tests/test_golden_vectors.py::TestSARSGoldenVectors::test_age_based_rebates[annual_income5-75_plus-expected_tax5-R500k 75+] PASSED [ 78%]
+moneyrite/tests/test_golden_vectors.py::TestSARSGoldenVectors::test_uif_calculations[monthly_gross0-expected_uif0-R5k - below cap] PASSED [ 81%]
+moneyrite/tests/test_golden_vectors.py::TestSARSGoldenVectors::test_uif_calculations[monthly_gross1-expected_uif1-R10k - below cap] PASSED [ 84%]
+moneyrite/tests/test_golden_vectors.py::TestSARSGoldenVectors::test_uif_calculations[monthly_gross2-expected_uif2-R17,712 - at cap threshold] PASSED [ 87%]
+moneyrite/tests/test_golden_vectors.py::TestSARSGoldenVectors::test_uif_calculations[monthly_gross3-expected_uif3-R20k - above cap] PASSED [ 90%]
+moneyrite/tests/test_golden_vectors.py::TestSARSGoldenVectors::test_uif_calculations[monthly_gross4-expected_uif4-R50k - well above cap] PASSED [ 93%]
+moneyrite/tests/test_golden_vectors.py::TestSARSGoldenVectors::test_complete_salary_breakdown_scenarios PASSED [ 96%]
+moneyrite/tests/test_golden_vectors.py::TestSARSGoldenVectors::test_tax_bracket_boundaries PASSED [100%]
+
+=============================== warnings summary ===============================
+moneyrite/tests/test_golden_vectors.py:19
+  /Users/k-is-for-krwele/Documents/jobrite/moneyrite/tests/test_golden_vectors.py:19: PytestUnknownMarkWarning: Unknown pytest.mark.golden - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.golden
+
+moneyrite/tests/test_golden_vectors.py:67
+  /Users/k-is-for-krwele/Documents/jobrite/moneyrite/tests/test_golden_vectors.py:67: PytestUnknownMarkWarning: Unknown pytest.mark.golden - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.golden
+
+moneyrite/tests/test_golden_vectors.py:90
+  /Users/k-is-for-krwele/Documents/jobrite/moneyrite/tests/test_golden_vectors.py:90: PytestUnknownMarkWarning: Unknown pytest.mark.golden - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.golden
+
+moneyrite/tests/test_golden_vectors.py:110
+  /Users/k-is-for-krwele/Documents/jobrite/moneyrite/tests/test_golden_vectors.py:110: PytestUnknownMarkWarning: Unknown pytest.mark.golden - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.golden
+
+moneyrite/tests/test_golden_vectors.py:139
+  /Users/k-is-for-krwele/Documents/jobrite/moneyrite/tests/test_golden_vectors.py:139: PytestUnknownMarkWarning: Unknown pytest.mark.golden - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.golden
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 32 passed, 5 warnings in 0.46s ========================
+
+
+============================================================
+🧪 Property-Based Tests (Invariants)
+============================================================
+Command: python -m pytest moneyrite/tests/test_property_based.py -v --tb=short
+Duration: 1.92s
+✅ PASSED
+
+Output:
+============================= test session starts ==============================
+platform darwin -- Python 3.12.3, pytest-7.4.3, pluggy-1.6.0 -- /Users/k-is-for-krwele/.pyenv/versions/3.12.3/bin/python
+cachedir: .pytest_cache
+hypothesis profile 'default'
+django: version: 5.2.5, settings: jobrite_project.settings (from env)
+rootdir: /Users/k-is-for-krwele/Documents/jobrite
+configfile: pytest.ini
+plugins: hypothesis-6.138.0, Faker-37.5.3, cov-4.1.0, asyncio-0.21.1, django-4.11.1, anyio-3.7.1
+asyncio: mode=Mode.STRICT
+collecting ... collected 8 items
+
+moneyrite/tests/test_property_based.py::TestTaxCalculationProperties::test_tax_monotonicity PASSED [ 12%]
+moneyrite/tests/test_property_based.py::TestTaxCalculationProperties::test_age_rebate_benefits PASSED [ 25%]
+moneyrite/tests/test_property_based.py::TestTaxCalculationProperties::test_uif_properties PASSED [ 37%]
+moneyrite/tests/test_property_based.py::TestTaxCalculationProperties::test_net_salary_properties PASSED [ 50%]
+moneyrite/tests/test_property_based.py::TestPayRateConversionProperties::test_conversion_round_trips PASSED [ 62%]
+moneyrite/tests/test_property_based.py::TestPayRateConversionProperties::test_hourly_to_annual_consistency PASSED [ 75%]
+moneyrite/tests/test_property_based.py::TestInputValidationProperties::test_invalid_input_handling PASSED [ 87%]
+moneyrite/tests/test_property_based.py::TestInputValidationProperties::test_boundary_conditions PASSED [100%]
+
+=============================== warnings summary ===============================
+moneyrite/tests/test_property_based.py:31
+  /Users/k-is-for-krwele/Documents/jobrite/moneyrite/tests/test_property_based.py:31: PytestUnknownMarkWarning: Unknown pytest.mark.property - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.property
+
+moneyrite/tests/test_property_based.py:52
+  /Users/k-is-for-krwele/Documents/jobrite/moneyrite/tests/test_property_based.py:52: PytestUnknownMarkWarning: Unknown pytest.mark.property - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.property
+
+moneyrite/tests/test_property_based.py:65
+  /Users/k-is-for-krwele/Documents/jobrite/moneyrite/tests/test_property_based.py:65: PytestUnknownMarkWarning: Unknown pytest.mark.property - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.property
+
+moneyrite/tests/test_property_based.py:88
+  /Users/k-is-for-krwele/Documents/jobrite/moneyrite/tests/test_property_based.py:88: PytestUnknownMarkWarning: Unknown pytest.mark.property - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.property
+
+moneyrite/tests/test_property_based.py:130
+  /Users/k-is-for-krwele/Documents/jobrite/moneyrite/tests/test_property_based.py:130: PytestUnknownMarkWarning: Unknown pytest.mark.property - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.property
+
+moneyrite/tests/test_property_based.py:156
+  /Users/k-is-for-krwele/Documents/jobrite/moneyrite/tests/test_property_based.py:156: PytestUnknownMarkWarning: Unknown pytest.mark.property - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.property
+
+moneyrite/tests/test_property_based.py:183
+  /Users/k-is-for-krwele/Documents/jobrite/moneyrite/tests/test_property_based.py:183: PytestUnknownMarkWarning: Unknown pytest.mark.property - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.property
+
+moneyrite/tests/test_property_based.py:212
+  /Users/k-is-for-krwele/Documents/jobrite/moneyrite/tests/test_property_based.py:212: PytestUnknownMarkWarning: Unknown pytest.mark.property - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.property
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 8 passed, 8 warnings in 1.15s =========================
+
+
+============================================================
+🧪 Snapshot Tests (UI Consistency)
+============================================================
+Command: python -m pytest moneyrite/tests/test_snapshots.py -v --tb=short
+Duration: 3.73s
+✅ PASSED
+
+Output:
+============================= test session starts ==============================
+platform darwin -- Python 3.12.3, pytest-7.4.3, pluggy-1.6.0 -- /Users/k-is-for-krwele/.pyenv/versions/3.12.3/bin/python
+cachedir: .pytest_cache
+hypothesis profile 'default'
+django: version: 5.2.5, settings: jobrite_project.settings (from env)
+rootdir: /Users/k-is-for-krwele/Documents/jobrite
+configfile: pytest.ini
+plugins: hypothesis-6.138.0, Faker-37.5.3, cov-4.1.0, asyncio-0.21.1, django-4.11.1, anyio-3.7.1
+asyncio: mode=Mode.STRICT
+collecting ... collected 8 items
+
+moneyrite/tests/test_snapshots.py::TestCalculationSnapshots::test_api_response_format_snapshot PASSED [ 12%]
+moneyrite/tests/test_snapshots.py::TestCalculationSnapshots::test_currency_formatting_snapshot PASSED [ 25%]
+moneyrite/tests/test_snapshots.py::TestCalculationSnapshots::test_error_message_format_snapshot PASSED [ 37%]
+moneyrite/tests/test_snapshots.py::TestCalculationSnapshots::test_percentage_formatting_snapshot PASSED [ 50%]
+moneyrite/tests/test_snapshots.py::TestCalculationSnapshots::test_salary_calculation_breakdown_snapshot PASSED [ 62%]
+moneyrite/tests/test_snapshots.py::TestCalculationSnapshots::test_tax_bracket_breakdown_snapshot PASSED [ 75%]
+moneyrite/tests/test_snapshots.py::TestUIComponentSnapshots::test_dashboard_financial_overview_structure PASSED [ 87%]
+moneyrite/tests/test_snapshots.py::TestUIComponentSnapshots::test_salary_calculator_page_structure PASSED [100%]
+
+=============================== warnings summary ===============================
+moneyrite/tests/test_snapshots.py::TestCalculationSnapshots::test_api_response_format_snapshot
+  /Users/k-is-for-krwele/.pyenv/versions/3.12.3/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1148: RemovedInDjango60Warning: The default scheme will be changed from 'http' to 'https' in Django 6.0. Pass the forms.URLField.assume_scheme argument to silence this warning, or set the FORMS_URLFIELD_ASSUME_HTTPS transitional setting to True to opt into using 'https' as the new default scheme.
+    return form_class(**defaults)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+========================= 8 passed, 1 warning in 2.93s =========================
+
+
+============================================================
+🧪 Legacy Calculation Tests
+============================================================
+Command: python moneyrite/test_calculations.py
+Duration: 0.43s
+✅ PASSED
+
+Output:
+🧮 Testing SARS Tax Calculations (2025 Tax Year)
+==================================================
+
+Test 1: R95,750 annual (tax-free threshold)
+  Annual Income: R95,750
+  Tax Before Rebates: R17,235.00
+  Total Rebate: R17,235.00
+  Calculated Tax: R0.00
+  Expected Tax: R0.00
+  Effective Rate: 0.00%
+  Marginal Rate: 18.00%
+  ✅ PASS (difference: R0.00)
+
+Test 2: R100,000 annual (first bracket)
+  Annual Income: R100,000
+  Tax Before Rebates: R18,000.00
+  Total Rebate: R17,235.00
+  Calculated Tax: R765.00
+  Expected Tax: R765.00
+  Effective Rate: 0.76%
+  Marginal Rate: 18.00%
+  ✅ PASS (difference: R0.00)
+
+Test 3: R300,000 annual (second bracket)
+  Annual Income: R300,000
+  Tax Before Rebates: R59,032.00
+  Total Rebate: R17,235.00
+  Calculated Tax: R41,797.00
+  Expected Tax: R41,797.00
+  Effective Rate: 13.93%
+  Marginal Rate: 26.00%
+  ✅ PASS (difference: R0.00)
+
+
+💼 Testing UIF Calculations
+==============================
+Test 1: R10,000 gross → R100.00 UIF
+  ✅ PASS
+Test 2: R20,000 gross → R177.12 UIF
+  ✅ PASS
+Test 3: R50,000 gross → R177.12 UIF
+  ✅ PASS
+
+
+💰 Testing Pay Rate Conversions
+===================================
+R150/hour × 40 hrs/week = R26000.00/month
+  ✅ PASS
+
+R25000/month conversions:
+  Weekly: R5769.23
+  Daily: R1153.85
+  Hourly: R144.23
+  Annually: R300000.00
+
+
+📊 Testing Complete Net Salary Calculation
+=============================================
+Gross Monthly: R25000.00
+Pension (10%): R2500.00
+Income Tax: R2772.42
+UIF: R177.12
+Medical Credit: R60.67
+Net Monthly: R19550.46
+Effective Tax Rate: 12.59%
+  ✅ Net < Gross (correct)
+  ✅ UIF within cap
+
+
+🎉 Testing Complete!
+Review the results above to ensure calculations are accurate.
+
+
+============================================================
+🧪 Coverage Report
+============================================================
+Command: python -m pytest moneyrite/tests/ --cov=moneyrite --cov-report=term-missing --cov-report=html
+Duration: 7.69s
+✅ PASSED
+
+Output:
+============================= test session starts ==============================
+platform darwin -- Python 3.12.3, pytest-7.4.3, pluggy-1.6.0
+django: version: 5.2.5, settings: jobrite_project.settings (from env)
+rootdir: /Users/k-is-for-krwele/Documents/jobrite
+configfile: pytest.ini
+plugins: hypothesis-6.138.0, Faker-37.5.3, cov-4.1.0, asyncio-0.21.1, django-4.11.1, anyio-3.7.1
+asyncio: mode=Mode.STRICT
+collected 48 items
+
+moneyrite/tests/test_snapshots.py ........                               [ 16%]
+moneyrite/tests/test_golden_vectors.py ................................  [ 83%]
+moneyrite/tests/test_property_based.py ........                          [100%]
+
+=============================== warnings summary ===============================
+moneyrite/tests/test_golden_vectors.py:19
+  /Users/k-is-for-krwele/Documents/jobrite/moneyrite/tests/test_golden_vectors.py:19: PytestUnknownMarkWarning: Unknown pytest.mark.golden - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.golden
+
+moneyrite/tests/test_golden_vectors.py:67
+  /Users/k-is-for-krwele/Documents/jobrite/moneyrite/tests/test_golden_vectors.py:67: PytestUnknownMarkWarning: Unknown pytest.mark.golden - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.golden
+
+moneyrite/tests/test_golden_vectors.py:90
+  /Users/k-is-for-krwele/Documents/jobrite/moneyrite/tests/test_golden_vectors.py:90: PytestUnknownMarkWarning: Unknown pytest.mark.golden - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.golden
+
+moneyrite/tests/test_golden_vectors.py:110
+  /Users/k-is-for-krwele/Documents/jobrite/moneyrite/tests/test_golden_vectors.py:110: PytestUnknownMarkWarning: Unknown pytest.mark.golden - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.golden
+
+moneyrite/tests/test_golden_vectors.py:139
+  /Users/k-is-for-krwele/Documents/jobrite/moneyrite/tests/test_golden_vectors.py:139: PytestUnknownMarkWarning: Unknown pytest.mark.golden - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.golden
+
+moneyrite/tests/test_property_based.py:31
+  /Users/k-is-for-krwele/Documents/jobrite/moneyrite/tests/test_property_based.py:31: PytestUnknownMarkWarning: Unknown pytest.mark.property - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.property
+
+moneyrite/tests/test_property_based.py:52
+  /Users/k-is-for-krwele/Documents/jobrite/moneyrite/tests/test_property_based.py:52: PytestUnknownMarkWarning: Unknown pytest.mark.property - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.property
+
+moneyrite/tests/test_property_based.py:65
+  /Users/k-is-for-krwele/Documents/jobrite/moneyrite/tests/test_property_based.py:65: PytestUnknownMarkWarning: Unknown pytest.mark.property - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.property
+
+moneyrite/tests/test_property_based.py:88
+  /Users/k-is-for-krwele/Documents/jobrite/moneyrite/tests/test_property_based.py:88: PytestUnknownMarkWarning: Unknown pytest.mark.property - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.property
+
+moneyrite/tests/test_property_based.py:130
+  /Users/k-is-for-krwele/Documents/jobrite/moneyrite/tests/test_property_based.py:130: PytestUnknownMarkWarning: Unknown pytest.mark.property - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.property
+
+moneyrite/tests/test_property_based.py:156
+  /Users/k-is-for-krwele/Documents/jobrite/moneyrite/tests/test_property_based.py:156: PytestUnknownMarkWarning: Unknown pytest.mark.property - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.property
+
+moneyrite/tests/test_property_based.py:183
+  /Users/k-is-for-krwele/Documents/jobrite/moneyrite/tests/test_property_based.py:183: PytestUnknownMarkWarning: Unknown pytest.mark.property - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.property
+
+moneyrite/tests/test_property_based.py:212
+  /Users/k-is-for-krwele/Documents/jobrite/moneyrite/tests/test_property_based.py:212: PytestUnknownMarkWarning: Unknown pytest.mark.property - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.property
+
+moneyrite/tests/test_snapshots.py::TestCalculationSnapshots::test_api_response_format_snapshot
+  /Users/k-is-for-krwele/.pyenv/versions/3.12.3/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1148: RemovedInDjango60Warning: The default scheme will be changed from 'http' to 'https' in Django 6.0. Pass the forms.URLField.assume_scheme argument to silence this warning, or set the FORMS_URLFIELD_ASSUME_HTTPS transitional setting to True to opt into using 'https' as the new default scheme.
+    return form_class(**defaults)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+
+---------- coverage: platform darwin, python 3.12.3-final-0 ----------
+Name                                                    Stmts   Miss  Cover   Missing
+-------------------------------------------------------------------------------------
+moneyrite/__init__.py                                       0      0   100%
+moneyrite/admin.py                                         42      2    95%   31, 35
+moneyrite/apps.py                                           4      0   100%
+moneyrite/error_handling.py                               120    120     0%   8-289
+moneyrite/feature_flags.py                                205    205     0%   8-384
+moneyrite/forms.py                                         36      0   100%
+moneyrite/management/__init__.py                            0      0   100%
+moneyrite/management/commands/__init__.py                   0      0   100%
+moneyrite/management/commands/manage_feature_flags.py     156    156     0%   7-293
+moneyrite/management/commands/monitor_slos.py             144    144     0%   7-245
+moneyrite/management/commands/update_tax_rates.py          81     81     0%   10-165
+moneyrite/middleware.py                                   133    133     0%   7-264
+moneyrite/migrations/0001_initial.py                       10      0   100%
+moneyrite/migrations/__init__.py                            0      0   100%
+moneyrite/models.py                                       130     32    75%   28, 64, 96, 106, 109, 157, 161, 165, 169-181, 185-188, 192, 196-201, 204, 222
+moneyrite/observability.py                                145    102    30%   21-28, 45, 51-86, 90-145, 153-158, 162-209, 215-219, 226-234, 239, 246-252, 256-260, 288-310, 314-318
+moneyrite/rate_engine.py                                  121     39    68%   128, 133, 148-154, 158-174, 233-257, 261-262, 266-270
+moneyrite/rate_updater.py                                  95     95     0%   8-256
+moneyrite/resilience.py                                   179    111    38%   46-49, 53-58, 62, 66-67, 71, 75, 79-80, 84, 88-116, 120-136, 140-156, 160-163, 211, 224-236, 248-259, 265-294, 304-311, 316-336
+moneyrite/test_calculations.py                             77     77     0%   7-161
+moneyrite/tests.py                                          1      1     0%   1
+moneyrite/tests/__init__.py                                 0      0   100%
+moneyrite/tests/test_golden_vectors.py                     38      0   100%
+moneyrite/tests/test_property_based.py                    105      4    96%   198-199, 203-205
+moneyrite/tests/test_snapshots.py                          94      0   100%
+moneyrite/urls.py                                           4      0   100%
+moneyrite/utils.py                                        261     43    84%   35, 44-45, 57-59, 102-104, 113-115, 128, 138, 148, 158, 169-174, 180-185, 194, 203, 225, 281-282, 306, 317, 335, 337, 371, 379-380, 412, 421, 432
+moneyrite/views.py                                        259    171    34%   56-108, 133, 182-183, 189-195, 201-217, 223-229, 235-252, 258-269, 276-309, 315-330, 336-352, 358-367, 373-390, 396-407, 413-448, 455-497, 503-509, 515-532
+-------------------------------------------------------------------------------------
+TOTAL                                                    2440   1516    38%
+Coverage HTML written to dir htmlcov
+
+======================= 48 passed, 14 warnings in 6.30s ========================
+
+
+============================================================
+📊 TEST SUMMARY REPORT
+============================================================
+✅ PASS Golden Test Vectors (SARS Accuracy) (CRITICAL)
+✅ PASS Property-Based Tests (Invariants) (CRITICAL)
+✅ PASS Snapshot Tests (UI Consistency)
+✅ PASS Legacy Calculation Tests (CRITICAL)
+✅ PASS Coverage Report
+
+Total Tests: 5
+Passed: 5
+Failed: 0
+Critical Failures: 0
+
+🎉 ALL TESTS PASSED!
+MoneyRite calculations are accurate and reliable.
+[2025-08-14 15:30:23] INFO: Running: Django unit tests
+[2025-08-14 15:30:23] INFO: Command: python manage.py test moneyrite
+[2025-08-14 15:30:24] ERROR: ❌ Django unit tests failed
+[2025-08-14 15:30:24] ERROR: Error: OpenTelemetry not available, using fallback observability
+Traceback (most recent call last):
+  File "/Users/k-is-for-krwele/Documents/jobrite/manage.py", line 22, in <module>
+    main()
+  File "/Users/k-is-for-krwele/Documents/jobrite/manage.py", line 18, in main
+    execute_from_command_line(sys.argv)
+  File "/Users/k-is-for-krwele/.pyenv/versions/3.12.3/lib/python3.12/site-packages/django/core/management/__init__.py", line 442, in execute_from_command_line
+    utility.execute()
+  File "/Users/k-is-for-krwele/.pyenv/versions/3.12.3/lib/python3.12/site-packages/django/core/management/__init__.py", line 436, in execute
+    self.fetch_command(subcommand).run_from_argv(self.argv)
+  File "/Users/k-is-for-krwele/.pyenv/versions/3.12.3/lib/python3.12/site-packages/django/core/management/commands/test.py", line 24, in run_from_argv
+    super().run_from_argv(argv)
+  File "/Users/k-is-for-krwele/.pyenv/versions/3.12.3/lib/python3.12/site-packages/django/core/management/base.py", line 416, in run_from_argv
+    self.execute(*args, **cmd_options)
+  File "/Users/k-is-for-krwele/.pyenv/versions/3.12.3/lib/python3.12/site-packages/django/core/management/base.py", line 460, in execute
+    output = self.handle(*args, **options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/k-is-for-krwele/.pyenv/versions/3.12.3/lib/python3.12/site-packages/django/core/management/commands/test.py", line 63, in handle
+    failures = test_runner.run_tests(test_labels)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/k-is-for-krwele/.pyenv/versions/3.12.3/lib/python3.12/site-packages/django/test/runner.py", line 1085, in run_tests
+    suite = self.build_suite(test_labels)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/k-is-for-krwele/.pyenv/versions/3.12.3/lib/python3.12/site-packages/django/test/runner.py", line 940, in build_suite
+    tests = self.load_tests_for_label(label, discover_kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/k-is-for-krwele/.pyenv/versions/3.12.3/lib/python3.12/site-packages/django/test/runner.py", line 921, in load_tests_for_label
+    tests = self.test_loader.discover(start_dir=label, **kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/k-is-for-krwele/.pyenv/versions/3.12.3/lib/python3.12/unittest/loader.py", line 309, in discover
+    tests = list(self._find_tests(start_dir, pattern))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/k-is-for-krwele/.pyenv/versions/3.12.3/lib/python3.12/unittest/loader.py", line 364, in _find_tests
+    tests, should_recurse = self._find_test_path(full_path, pattern)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/k-is-for-krwele/.pyenv/versions/3.12.3/lib/python3.12/unittest/loader.py", line 416, in _find_test_path
+    raise ImportError(
+ImportError: 'tests' module incorrectly imported from '/Users/k-is-for-krwele/Documents/jobrite/moneyrite/tests'. Expected '/Users/k-is-for-krwele/Documents/jobrite/moneyrite'. Is this module globally installed?
+[2025-08-14 15:30:24] ERROR: ❌ Tests failed - aborting deployment

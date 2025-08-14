@@ -1,6 +1,7 @@
 # 🚀 DEPLOY JOBRITE NOW - Step by Step
 
 ## ✅ Pre-Deployment Status
+
 - **Application**: Ready ✅
 - **Supabase**: Connected ✅
 - **Tests**: Passing ✅
@@ -10,6 +11,7 @@
 ## 🎯 DEPLOY TO RENDER.COM (Recommended - Free Tier)
 
 ### Step 1: Push to GitHub
+
 ```bash
 git add .
 git commit -m "Deploy JobRite with Supabase integration"
@@ -17,6 +19,7 @@ git push origin main
 ```
 
 ### Step 2: Deploy to Render
+
 1. **Go to**: https://render.com
 2. **Sign up/Login** with your GitHub account
 3. **Click**: "New +" → "Web Service"
@@ -28,6 +31,7 @@ git push origin main
    - **Environment**: `Python 3`
 
 ### Step 3: Set Environment Variables
+
 In Render dashboard, add these environment variables:
 
 ```
@@ -42,6 +46,7 @@ DEFAULT_FROM_EMAIL=JobRite Team <noreply@jobrite.com>
 ```
 
 ### Step 4: Deploy!
+
 Click **"Create Web Service"** - Render will automatically deploy your app!
 
 ---
@@ -49,9 +54,11 @@ Click **"Create Web Service"** - Render will automatically deploy your app!
 ## 🎯 ALTERNATIVE: DEPLOY TO HEROKU
 
 ### Step 1: Install Heroku CLI
+
 Download from: https://devcenter.heroku.com/articles/heroku-cli
 
 ### Step 2: Deploy Commands
+
 ```bash
 # Login to Heroku
 heroku login
@@ -75,6 +82,7 @@ git push heroku main
 ## 🎯 ALTERNATIVE: DEPLOY TO RAILWAY
 
 ### Step 1: Deploy
+
 1. **Go to**: https://railway.app
 2. **Login** with GitHub
 3. **Click**: "Deploy from GitHub repo"
@@ -87,13 +95,17 @@ git push heroku main
 ## ✅ POST-DEPLOYMENT CHECKLIST
 
 ### 1. Create Admin User
+
 After deployment, run in your platform's console:
+
 ```bash
 python manage.py createsuperuser
 ```
 
 ### 2. Test Your Live App
+
 Visit your deployed URL and test:
+
 - [ ] Homepage loads
 - [ ] User registration
 - [ ] Job posting
@@ -101,11 +113,14 @@ Visit your deployed URL and test:
 - [ ] Admin panel at `/admin`
 
 ### 3. Update Supabase
+
 In Supabase dashboard:
+
 1. Go to Authentication → Settings
 2. Add your production URL to "Site URL"
 
 ## 🎉 YOUR APP WILL BE LIVE AT:
+
 - **Render**: `https://jobrite-portal.onrender.com`
 - **Heroku**: `https://jobrite-portal.herokuapp.com`
 - **Railway**: `https://jobrite-portal.up.railway.app`
@@ -113,6 +128,7 @@ In Supabase dashboard:
 ## 🚀 READY TO LAUNCH!
 
 Your JobRite application is production-ready with:
+
 - ✅ Supabase backend integration
 - ✅ Job portal functionality
 - ✅ User authentication

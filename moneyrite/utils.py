@@ -4,10 +4,51 @@ South African tax calculations with versioned rate engine
 """
 
 from decimal import Decimal, ROUND_HALF_UP, InvalidOperation
-from typing import Dict, Tuple
+from typing import Dict, Tuple, Union
 import logging
 
 logger = logging.getLogger(__name__)
+
+
+def validate_financial_input(value: Union[str, int, float, Decimal], field_name: str = "input") -> Decimal:
+    """
+    Validate financial input with proper error handling
+    
+    Args:
+        value: Input value to validate
+        field_name: Name of the field for error messages
+    
+    Returns:
+        Validated Decimal value
+    
+    Raises:
+        TypeError: For None values and wrong types
+        ValueError: For negative values and invalid numeric strings
+        InvalidOperation: For decimal conversion failures
+    """
+    if value is None:
+        raise TypeError(f"{field_name} cannot be None")
+    
+    # Handle string inputs
+    if isinstance(value, str):
+        if not value.strip():
+            raise ValueError(f"{field_name} cannot be empty")
+        try:
+            decimal_value = Decimal(value)
+        except (InvalidOperation, ValueError) as e:
+            raise ValueError(f"Invalid numeric input for {field_name}: {value}")
+    else:
+        # Handle numeric inputs
+        try:
+            decimal_value = Decimal(str(value))
+        except (InvalidOperation, ValueError, TypeError) as e:
+            raise ValueError(f"Invalid numeric input for {field_name}: {value}")
+    
+    # Check for negative values
+    if decimal_value < 0:
+        raise ValueError(f"Invalid {field_name}: cannot be negative ({decimal_value})")
+    
+    return decimal_value
 
 # Import observability with fallback
 try:
@@ -47,10 +88,10 @@ class SARSTaxCalculator:
     FALLBACK_UIF_RATE = Decimal('0.01')             # 1% of salary
     FALLBACK_UIF_MONTHLY_CAP = Decimal('177.12')    # Maximum monthly UIF contribution
 
-    # Fallback medical tax credits (monthly amounts in ZAR)
-    FALLBACK_MEDICAL_CREDIT_MAIN = Decimal('364')   # Main member
-    FALLBACK_MEDICAL_CREDIT_DEPENDENT = Decimal('364')  # First dependent
-    FALLBACK_MEDICAL_CREDIT_ADDITIONAL = Decimal('246')  # Each additional dependent
+    # Fallback medical tax credits (annual amounts in ZAR)
+    FALLBACK_MEDICAL_CREDIT_MAIN = Decimal('364')   # Main member (annual)
+    FALLBACK_MEDICAL_CREDIT_DEPENDENT = Decimal('364')  # First dependent (annual)
+    FALLBACK_MEDICAL_CREDIT_ADDITIONAL = Decimal('246')  # Each additional dependent (annual)
 
     @classmethod
     def _get_rate_engine(cls):
@@ -162,7 +203,7 @@ class SARSTaxCalculator:
         return cls.FALLBACK_UIF_MONTHLY_CAP
     
     @classmethod
-    def calculate_annual_tax(cls, annual_income: Decimal, age_category: str = 'under_65') -> Dict:
+    def calculate_annual_tax(cls, annual_income: Union[str, int, float, Decimal], age_category: str = 'under_65') -> Dict:
         """
         Calculate annual income tax based on SARS brackets
 
@@ -184,9 +225,10 @@ class SARSTaxCalculator:
             return cls._calculate_annual_tax_impl(annual_income, age_category)
 
     @classmethod
-    def _calculate_annual_tax_impl(cls, annual_income: Decimal, age_category: str = 'under_65') -> Dict:
+    def _calculate_annual_tax_impl(cls, annual_income: Union[str, int, float, Decimal], age_category: str = 'under_65') -> Dict:
         """Implementation of annual tax calculation"""
-        annual_income = Decimal(str(annual_income))
+        # Validate input with proper error handling
+        annual_income = validate_financial_input(annual_income, "annual_income")
 
         # Calculate tax before rebates using cumulative brackets
         tax_before_rebates = Decimal('0')
@@ -317,13 +359,13 @@ class SARSTaxCalculator:
     @classmethod
     def calculate_medical_tax_credit(cls, members: int) -> Decimal:
         """
-        Calculate monthly medical tax credit
+        Calculate annual medical tax credit
         
         Args:
             members: Number of medical scheme members
         
         Returns:
-            Monthly medical tax credit amount
+            Annual medical tax credit amount
         """
         if members <= 0:
             return Decimal('0')
@@ -343,8 +385,8 @@ class SARSTaxCalculator:
 class PayRateConverter:
     """Convert between different pay rate periods"""
     
-    # Standard conversion factors
-    WEEKS_PER_MONTH = Decimal('4.33')  # 52 weeks / 12 months
+    # Standard conversion factors with higher precision
+    WEEKS_PER_MONTH = Decimal('52') / Decimal('12')  # More precise: 4.333333...
     MONTHS_PER_YEAR = Decimal('12')
     WEEKS_PER_YEAR = Decimal('52')
     DAYS_PER_WEEK = Decimal('5')  # Standard work week
@@ -390,8 +432,8 @@ class PayRateConverter:
             raise ValueError(f"Unknown target period: {target_period}")
 
 
-def calculate_net_salary(gross_monthly: Decimal, include_medical: bool = False,
-                        medical_members: int = 1, pension_percentage: Decimal = Decimal('0'),
+def calculate_net_salary(gross_monthly: Union[str, int, float, Decimal], include_medical: bool = False,
+                        medical_members: int = 1, pension_percentage: Union[str, int, float, Decimal] = Decimal('0'),
                         age_category: str = 'under_65') -> Dict:
     """
     Calculate net monthly salary after all deductions
@@ -406,15 +448,9 @@ def calculate_net_salary(gross_monthly: Decimal, include_medical: bool = False,
     Returns:
         Dict with complete salary breakdown including pay rate conversions
     """
-    # Input validation
-    try:
-        gross_monthly = Decimal(str(gross_monthly))
-        pension_percentage = Decimal(str(pension_percentage))
-    except (ValueError, TypeError, InvalidOperation):
-        raise ValueError("Invalid input: gross_monthly and pension_percentage must be numeric")
-    
-    if gross_monthly < 0:
-        raise ValueError("gross_monthly must be non-negative")
+    # Input validation with proper error handling
+    gross_monthly = validate_financial_input(gross_monthly, "gross_monthly")
+    pension_percentage = validate_financial_input(pension_percentage, "pension_percentage")
     
     # Clamp pension percentage to valid range
     pension_percentage = max(Decimal('0'), min(pension_percentage, Decimal('27.5')))
@@ -436,7 +472,8 @@ def calculate_net_salary(gross_monthly: Decimal, include_medical: bool = False,
     # Calculate medical tax credit (reduces tax, not salary)
     medical_credit_monthly = Decimal('0')
     if include_medical:
-        medical_credit_monthly = SARSTaxCalculator.calculate_medical_tax_credit(medical_members)
+        medical_credit_annual = SARSTaxCalculator.calculate_medical_tax_credit(medical_members)
+        medical_credit_monthly = medical_credit_annual / Decimal('12')
         income_tax_monthly = max(Decimal('0'), income_tax_monthly - medical_credit_monthly)
 
     # Calculate net salary
@@ -452,10 +489,14 @@ def calculate_net_salary(gross_monthly: Decimal, include_medical: bool = False,
         'annually': PayRateConverter.from_monthly(gross_monthly, 'annually').quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
     }
 
+    # Calculate taxable monthly amount
+    taxable_monthly = gross_monthly - pension_monthly
+
     return {
         'gross_monthly': gross_monthly.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP),
         'gross_annual': gross_annual.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP),
         'pension_monthly': pension_monthly.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP),
+        'taxable_monthly': taxable_monthly.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP),
         'taxable_annual': taxable_annual.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP),
         'income_tax_monthly': income_tax_monthly.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP),
         'uif_monthly': uif_monthly.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP),
