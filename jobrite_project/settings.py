@@ -33,12 +33,17 @@ DEBUG = os.environ.get('DEBUG', 'True').lower() == 'true'
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,testserver,0.0.0.0').split(',')
 
-# Add Vercel domains
+# Add deployment platform domains
 if not DEBUG:
-    ALLOWED_HOSTS.extend(['.vercel.app', '.now.sh'])
+    ALLOWED_HOSTS.extend([
+        '.vercel.app', '.now.sh',  # Vercel
+        '.onrender.com', '.render.com',  # Render
+        '.herokuapp.com',  # Heroku
+        '.railway.app'  # Railway
+    ])
 
-# Always allow Vercel domains for deployment
-ALLOWED_HOSTS.extend(['.vercel.app', '.now.sh'])
+# Always allow common deployment domains
+ALLOWED_HOSTS.extend(['.onrender.com', '.render.com', '.vercel.app', '.now.sh'])
 
 
 # Application definition
@@ -183,10 +188,14 @@ SESSION_COOKIE_SECURE = not DEBUG  # True in production with HTTPS
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 
-# Disable CSRF for health check (temporary)
+# CSRF trusted origins for deployment platforms
 CSRF_TRUSTED_ORIGINS = [
     'https://*.vercel.app',
     'https://*.now.sh',
+    'https://*.onrender.com',
+    'https://*.render.com',
+    'https://*.herokuapp.com',
+    'https://*.railway.app',
 ]
 
 # Email Configuration

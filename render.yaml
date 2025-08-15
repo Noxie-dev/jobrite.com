@@ -2,8 +2,9 @@ services:
   - type: web
     name: jobrite
     env: python
-    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
-    startCommand: gunicorn jobrite_project.wsgi:application
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput --clear
+    startCommand: gunicorn jobrite_project.wsgi:application --bind 0.0.0.0:$PORT --timeout 120 --workers 2
+    plan: starter  # Use free plan
     envVars:
       - key: PYTHON_VERSION
         value: 3.12.3
@@ -21,3 +22,5 @@ services:
         value: django.core.mail.backends.console.EmailBackend
       - key: DEFAULT_FROM_EMAIL
         value: JobRite Team <noreply@jobrite.com>
+      - key: SITE_URL
+        value: https://jobrite-com.onrender.com
