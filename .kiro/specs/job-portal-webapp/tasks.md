@@ -206,7 +206,7 @@
   - Create saved search functionality for logged-in users
   - _Requirements: 7.2, 7.3_
 
-- [ ] 26. Add email verification for registration
+- [x] 26. Add email verification for registration
 
   - Implement email verification during registration
   - Create email verification templates

@@ -24,6 +24,7 @@ urlpatterns = [
     path("health/", views.health_check, name="health_check"),
     path("debug/", views.debug_view, name="debug_view"),
     path("admin/", admin.site.urls),
+    path("social-auth/", include("social_django.urls", namespace="social")),
     path("", include("jobs.urls")),
     path("users/", include("users.urls")),
     path("blog/", include("blog.urls")),
