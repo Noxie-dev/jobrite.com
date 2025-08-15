@@ -12,27 +12,58 @@ from .forms import JobSearchForm, ContactForm, JobApplicationForm, SavedSearchFo
 def home(request):
     """Home page view with job categories and featured jobs"""
     
-    # Get job categories with counts
-    job_categories = []
-    category_choices = Job.CATEGORY_CHOICES
-    
-    for category_key, category_name in category_choices:
-        job_count = Job.objects.filter(category=category_key).count()
-        job_categories.append({
-            'key': category_key,
-            'name': category_name,
-            'count': job_count,
-            'description': get_category_description(category_key)
-        })
-    
-    # Get featured jobs (limit to 6 for home page)
-    featured_jobs = Job.objects.filter(is_featured=True)[:6]
-    
-    # Get remote jobs specifically for the remote section
-    remote_jobs = Job.objects.filter(is_remote=True, category__in=['it', 'logistics'])[:2]
-    
-    # Get recent jobs
-    recent_jobs = Job.objects.all()[:8]
+    try:
+        # Get job categories with counts
+        job_categories = []
+        category_choices = Job.CATEGORY_CHOICES
+        
+        for category_key, category_name in category_choices:
+            try:
+                job_count = Job.objects.filter(category=category_key).count()
+            except Exception:
+                job_count = 0
+            job_categories.append({
+                'key': category_key,
+                'name': category_name,
+                'count': job_count,
+                'description': get_category_description(category_key)
+            })
+        
+        # Get featured jobs (limit to 6 for home page)
+        try:
+            featured_jobs = Job.objects.filter(is_featured=True)[:6]
+        except Exception:
+            featured_jobs = []
+        
+        # Get remote jobs specifically for the remote section
+        try:
+            remote_jobs = Job.objects.filter(is_remote=True, category__in=['it', 'logistics'])[:2]
+        except Exception:
+            remote_jobs = []
+        
+        # Get recent jobs
+        try:
+            recent_jobs = Job.objects.all()[:8]
+        except Exception:
+            recent_jobs = []
+        
+        # Get total jobs count
+        try:
+            total_jobs = Job.objects.count()
+        except Exception:
+            total_jobs = 0
+            
+    except Exception as e:
+        # If all database queries fail, provide default data
+        job_categories = [
+            {'key': 'it', 'name': 'IT & Technology', 'count': 0, 'description': 'Technology roles'},
+            {'key': 'sales', 'name': 'Sales', 'count': 0, 'description': 'Sales opportunities'},
+            {'key': 'hr', 'name': 'Human Resources', 'count': 0, 'description': 'HR positions'},
+        ]
+        featured_jobs = []
+        remote_jobs = []
+        recent_jobs = []
+        total_jobs = 0
     
     context = {
         'page_title': 'Find Your Perfect Job',
@@ -40,7 +71,7 @@ def home(request):
         'featured_jobs': featured_jobs,
         'remote_jobs': remote_jobs,
         'recent_jobs': recent_jobs,
-        'total_jobs': Job.objects.count(),
+        'total_jobs': total_jobs,
     }
     return render(request, 'home.html', context)
 
