@@ -38,3 +38,30 @@ def custom_404(request, exception):
 def custom_500(request):
     """Custom 500 error handler"""
     return render(request, '500.html', status=500)
+
+def debug_view(request):
+    """Simple debug view to test basic functionality"""
+    import os
+    from django.conf import settings
+    
+    debug_info = {
+        'message': 'Django is working!',
+        'environment': {
+            'DEBUG': settings.DEBUG,
+            'SECRET_KEY_SET': bool(settings.SECRET_KEY),
+            'SUPABASE_URL_SET': bool(getattr(settings, 'SUPABASE_URL', None)),
+            'SUPABASE_KEY_SET': bool(getattr(settings, 'SUPABASE_KEY', None)),
+        },
+        'database': 'testing_db_connection',
+    }
+    
+    # Test database connection
+    try:
+        from django.db import connection
+        with connection.cursor() as cursor:
+            cursor.execute('SELECT 1')
+            debug_info['database'] = 'connected'
+    except Exception as e:
+        debug_info['database'] = f'error: {str(e)}'
+    
+    return JsonResponse(debug_info)
