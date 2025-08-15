@@ -159,3 +159,4 @@ jobriteTests/
 jobriteUITests/
 # Local Netlify folder
 .netlify
+.vercel

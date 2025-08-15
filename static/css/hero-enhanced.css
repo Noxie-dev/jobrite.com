@@ -59,8 +59,8 @@
 body .hero-section {
     position: relative !important;
     width: 100vw !important;
-    height: 100vh !important;
-    min-height: 100vh !important;
+    height: auto !important;
+    min-height: 80vh !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;

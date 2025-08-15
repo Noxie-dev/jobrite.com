@@ -353,6 +353,171 @@
     }
 }
 
+/* Enhanced Footer Mobile Styles */
+@media (max-width: 768px) {
+    .footer-enhanced {
+        margin-top: 3rem;
+    }
+    
+    .footer-enhanced .py-16 {
+        padding-top: 3rem;
+        padding-bottom: 3rem;
+    }
+    
+    .footer-enhanced .grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    .footer-logo {
+        font-size: 2rem;
+        text-align: center;
+    }
+    
+    .footer-tagline {
+        font-size: 1rem;
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .social-links {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .social-icons {
+        justify-content: center;
+        gap: 1.5rem;
+    }
+    
+    .social-icon {
+        width: 3rem;
+        height: 3rem;
+    }
+    
+    .footer-section {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .footer-section-title {
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .footer-section-title::after {
+        left: 50%;
+        transform: translateX(-50%);
+        width: 3rem;
+    }
+    
+    .footer-links {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+    
+    .footer-link {
+        justify-content: center;
+        padding: 0.75rem 1rem;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        min-height: 44px;
+    }
+    
+    .footer-link-icon {
+        width: 1.5rem;
+        height: 1.5rem;
+        margin-right: 1rem;
+    }
+    
+    .footer-bottom {
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+    }
+    
+    .footer-bottom-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 1.5rem;
+    }
+    
+    .footer-badges {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: center;
+    }
+    
+    .footer-badge {
+        padding: 0.75rem 1.5rem;
+        font-size: 0.9rem;
+        min-height: 44px;
+    }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+    .footer-enhanced .px-4 {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    .footer-logo {
+        font-size: 1.75rem;
+    }
+    
+    .footer-tagline {
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+    
+    .social-icons {
+        gap: 1rem;
+    }
+    
+    .social-icon {
+        width: 2.75rem;
+        height: 2.75rem;
+    }
+    
+    .footer-section-title {
+        font-size: 1rem;
+    }
+    
+    .footer-link {
+        font-size: 0.95rem;
+        padding: 0.875rem 1rem;
+    }
+    
+    .footer-badge {
+        padding: 0.625rem 1.25rem;
+        font-size: 0.8rem;
+    }
+}
+
+/* Touch-friendly improvements for footer */
+@media (hover: none) and (pointer: coarse) {
+    .footer-link,
+    .social-icon {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    .footer-link {
+        padding: 0.875rem 1rem;
+    }
+    
+    .social-icon {
+        width: 3rem;
+        height: 3rem;
+    }
+    
+    .footer-badge {
+        padding: 0.75rem 1.5rem;
+        min-height: 44px;
+    }
+}
+
 /* Dark mode support for mobile */
 @media (prefers-color-scheme: dark) and (max-width: 768px) {
     .mobile-menu {

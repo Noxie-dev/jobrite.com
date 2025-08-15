@@ -1,0 +1,19 @@
+Environment Variables to add in Vercel Dashboard:
+
+SUPABASE_URL=https://wmefqsnpmhbpuqybhusu.supabase.co
+SUPABASE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndtZWZxc25wbWhicHVxeWJodXN1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUxNjYyMTQsImV4cCI6MjA3MDc0MjIxNH0.V5H-LLnIvVYQ0WvY5ftwWq5ZnFKOkPNt4czcaiuH4WM
+SUPABASE_SERVICE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndtZWZxc25wbWhicHVxeWJodXN1Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NTE2NjIxNCwiZXhwIjoyMDcwNzQyMjE0fQ.M48dyDv81BMl73Df5BCopEEfStt_fOrfAMdBFRGcJBo
+DATABASE_URL=postgresql://postgres:MashavelliIntheArea123@db.wmefqsnpmhbpuqybhusu.supabase.co:5432/postgres
+SECRET_KEY=django-insecure-CHANGE-THIS-IN-PRODUCTION-m5aj!e*_vpvmd7rhw7i$k2yixbw+06djzfo*u393k3&h_nbxy0
+DEBUG=False
+ALLOWED_HOSTS=.vercel.app,.now.sh,jobrite-com.vercel.app
+EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend
+DEFAULT_FROM_EMAIL=JobRite Team <noreply@jobrite.com>
+SITE_URL=https://jobrite-com.vercel.app
+
+Instructions:
+1. Go to https://vercel.com/noxie-devs-projects/jobrite-com/settings/environment-variables
+2. Add each variable above (one per line)
+3. Set Environment to "Production, Preview, and Development"
+4. Click "Save"
+5. Redeploy with: vercel --prod
