@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoneyRite Test</title>
+    <style>
+        :root {
+            --primary-color: #233D4D;
+            --primary-dark: #1a2d3a;
+            --accent-color: #FE7F2D;
+            --accent-dark: #e56b1f;
+            --text-primary: #233D4D;
+            --text-secondary: #6B7280;
+            --success-color: #10B981;
+            --warning-color: #F59E0B;
+            --error-color: #EF4444;
+        }
+    </style>
+    <link rel="stylesheet" href="static/css/moneyrite-tools.css">
+</head>
+<body>
+    <h1>MoneyRite Test Page</h1>
+    
+    <!-- Free Financial Services Section -->
+    <section class="free-financial-services py-16 lg:py-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <div class="free-services-badge">
+                    <span class="badge-text">100% FREE</span>
+                    <span class="badge-subtext">No Registration Required</span>
+                </div>
+                <h2 class="section-title">Financial Planning Tools</h2>
+                <p class="section-description">Take control of your finances with our professional-grade tools.</p>
+            </div>
+            
+            <div class="tools-grid">
+                <!-- Salary Calculator Tool -->
+                <div class="tool-card" onclick="openSalaryCalculator()">
+                    <div class="tool-icon">💰</div>
+                    <h3 class="tool-title">Salary Calculator</h3>
+                    <p class="tool-description">Calculate your take-home pay and tax obligations.</p>
+                    <button class="tool-button">Try Now - Free</button>
+                </div>
+                
+                <!-- Budget Planner Tool -->
+                <div class="tool-card" onclick="openBudgetPlanner()">
+                    <div class="tool-icon">📊</div>
+                    <h3 class="tool-title">Budget Planner</h3>
+                    <p class="tool-description">Plan your monthly budget with expense tracking.</p>
+                    <button class="tool-button">Try Now - Free</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="static/js/moneyrite-tools.js"></script>
+    <script src="static/js/moneyrite-functions.js"></script>
+    <script>
+        console.log('MoneyRite tools loaded:', typeof window.MoneyRiteTools);
+        console.log('Functions loaded:', typeof openSalaryCalculator);
+    </script>
+</body>
+</html>
