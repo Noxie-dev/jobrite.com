@@ -48,3 +48,14 @@ The JobRite application is experiencing a 500 server error on the live site due 
 2. WHEN the application is deployed THEN it SHALL be accessible without 500 server errors
 3. WHEN users access the live site THEN they SHALL see the proper JobRite interface
 4. WHEN the deployment completes THEN all static files SHALL be served correctly
+
+### Requirement 5
+
+**User Story:** As a developer, I want all required dependencies to be properly declared, so that the deployment process can install all necessary packages.
+
+#### Acceptance Criteria
+
+1. WHEN the requirements.txt is processed THEN all imported Django apps SHALL have their corresponding packages listed
+2. WHEN social_django is imported in settings THEN django-social-auth or social-auth-app-django SHALL be in requirements.txt
+3. WHEN the build process runs THEN no ModuleNotFoundError SHALL occur for configured Django apps
+4. WHEN dependencies are installed THEN the application SHALL start without import errors

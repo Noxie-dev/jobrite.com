@@ -6,6 +6,8 @@ dj-database-url>=2.1.0
 psycopg2-binary>=2.9.7
 supabase>=2.18.1
 python-dotenv>=1.0.0
+social-auth-app-django>=5.4.0
+social-auth-core>=4.5.0
 
 # Testing and Quality Assurance
 pytest>=7.4.0

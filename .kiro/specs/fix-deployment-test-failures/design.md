@@ -6,10 +6,11 @@ This design addresses the critical test failures preventing successful deploymen
 
 ## Architecture
 
-The fix involves three main components:
+The fix involves four main components:
 1. **Calculation Engine Fixes** - Correct mathematical inconsistencies in tax and salary calculations
 2. **Input Validation Layer** - Add proper error handling for invalid inputs
 3. **Data Structure Consistency** - Ensure all expected fields are present in calculation results
+4. **Dependency Management** - Ensure all required packages are properly declared in requirements.txt
 
 ## Components and Interfaces
 
@@ -47,6 +48,18 @@ The fix involves three main components:
 - Add explicit validation for negative values
 - Implement proper string-to-decimal conversion with error handling
 - Add type checking for None and invalid types
+
+### 4. Dependency Management System
+
+**Issues to Fix:**
+- social_django is imported in Django settings but not declared in requirements.txt
+- ModuleNotFoundError during deployment build process
+- Missing dependency causing deployment failures
+
+**Design Changes:**
+- Add social-auth-app-django to requirements.txt
+- Audit all INSTALLED_APPS for missing dependencies
+- Ensure consistent dependency versions across environments
 
 ## Data Models
 
@@ -143,7 +156,12 @@ def validate_financial_input(value):
 2. Verify all tests pass
 3. Run deployment process
 
-### Phase 4: Deployment
+### Phase 4: Dependency Management
+1. Add missing social_django dependency to requirements.txt
+2. Verify all Django apps in INSTALLED_APPS have corresponding packages
+3. Test dependency installation locally
+
+### Phase 5: Deployment
 1. Collect static files
 2. Run production deployment
 3. Verify live site functionality

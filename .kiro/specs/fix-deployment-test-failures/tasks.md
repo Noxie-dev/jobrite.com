@@ -39,3 +39,9 @@
   - Collect static files and verify production configuration
   - Confirm the live site loads without 500 errors
   - _Requirements: 4.1, 4.2, 4.3, 4.4_
+
+- [x] 8. Fix missing social_django dependency
+  - Add social-auth-app-django to requirements.txt with appropriate version
+  - Verify the package provides the social_django module used in settings
+  - Test that the dependency installs correctly in a clean environment
+  - _Requirements: 5.1, 5.2, 5.3, 5.4_
