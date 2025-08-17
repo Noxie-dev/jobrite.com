@@ -1,6 +1,0 @@
-[2025-08-14 14:02:53] INFO: 🚀 Starting safe deployment with feature flags...
-[2025-08-14 14:02:53] INFO: 🧪 Running comprehensive test suite...
-[2025-08-14 14:02:53] INFO: Running: Golden test vectors and property-based tests
-[2025-08-14 14:02:53] INFO: Command: python run_tests.py
-[2025-08-14 14:02:53] ERROR: ❌ Golden test vectors and property-based tests failed
-[2025-08-14 14:02:53] ERROR: ❌ Tests failed - aborting deployment

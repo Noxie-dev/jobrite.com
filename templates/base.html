@@ -95,23 +95,23 @@
                 </div>
                 
                 <!-- Desktop Navigation -->
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="{% url 'jobs:home' %}" class="text-text-primary hover:text-accent transition-colors duration-200">Home</a>
-                    <a href="{% url 'jobs:search' %}" class="text-text-primary hover:text-accent transition-colors duration-200">Jobs</a>
-                    <a href="#" class="text-text-primary hover:text-accent transition-colors duration-200">Companies</a>
+                <div class="hidden md:flex items-center space-x-2">
+                    <a href="{% url 'jobs:home' %}" class="desktop-nav-link">Home</a>
+                    <a href="{% url 'jobs:search' %}" class="desktop-nav-link">Jobs</a>
+                    <a href="#" class="desktop-nav-link">Companies</a>
                     {% if user.is_authenticated %}
-                        <a href="{% url 'moneyrite:dashboard' %}" class="text-text-primary hover:text-accent transition-colors duration-200 font-medium">
+                        <a href="{% url 'moneyrite:dashboard' %}" class="desktop-nav-link">
                             💰 MoneyRite
                         </a>
                     {% endif %}
-                    <a href="{% url 'blog:blog_list' %}" class="text-text-primary hover:text-accent transition-colors duration-200">Career Advice</a>
+                    <a href="{% url 'blog:blog_list' %}" class="desktop-nav-link">Career Advice</a>
                 </div>
                 
                 <!-- User Actions -->
                 <div class="hidden md:flex items-center space-x-4">
                     {% if user.is_authenticated %}
                         <div class="relative group">
-                            <button class="flex items-center space-x-2 text-text-primary hover:text-accent transition-colors duration-200">
+                            <button class="user-dropdown-button flex items-center space-x-2">
                                 {% if user.userprofile.profile_picture %}
                                     <img src="{{ user.userprofile.profile_picture.url }}" alt="{{ user.get_full_name }}" class="w-8 h-8 rounded-full object-cover">
                                 {% else %}
@@ -119,42 +119,42 @@
                                         <span class="text-white text-sm font-semibold">{{ user.first_name.0|default:user.username.0|upper }}</span>
                                     </div>
                                 {% endif %}
-                                <span>{{ user.first_name|default:user.username }}</span>
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <span class="font-semibold">{{ user.first_name|default:user.username }}</span>
+                                <svg class="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                                 </svg>
                             </button>
                             
                             <!-- Dropdown Menu -->
-                            <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                            <div class="user-dropdown-menu">
                                 <div class="py-2">
-                                    <a href="{% url 'users:profile' %}" class="block px-4 py-2 text-sm text-text-primary hover:bg-gray-100">
-                                        <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <a href="{% url 'users:profile' %}">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                                         </svg>
                                         My Profile
                                     </a>
-                                    <a href="#" class="block px-4 py-2 text-sm text-text-primary hover:bg-gray-100">
-                                        <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <a href="#">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                                         </svg>
                                         Saved Jobs
                                     </a>
-                                    <a href="{% url 'jobs:my_applications' %}" class="block px-4 py-2 text-sm text-text-primary hover:bg-gray-100">
-                                        <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <a href="{% url 'jobs:my_applications' %}">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                         </svg>
                                         My Applications
                                     </a>
-                                    <a href="{% url 'moneyrite:dashboard' %}" class="block px-4 py-2 text-sm text-text-primary hover:bg-gray-100">
-                                        <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <a href="{% url 'moneyrite:dashboard' %}">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
                                         </svg>
                                         MoneyRite
                                     </a>
                                     <div class="border-t border-gray-200 my-1"></div>
-                                    <a href="{% url 'users:logout' %}" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
-                                        <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <a href="{% url 'users:logout' %}">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                                         </svg>
                                         Sign Out

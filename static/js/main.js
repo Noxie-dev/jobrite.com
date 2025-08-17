@@ -2,12 +2,39 @@
 
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize all components
+    initHeaderDropdown();
     initMobileMenu();
     initParticleAnimation();
     initScrollAnimations();
     initSearchFunctionality();
     initUtilityPages();
 });
+
+/**
+ * Header Dropdown Menu Management - Simplified
+ */
+function initHeaderDropdown() {
+    // Let CSS handle the hover states, just add click outside to close
+    document.addEventListener('click', function(e) {
+        const dropdowns = document.querySelectorAll('.user-dropdown-menu');
+        dropdowns.forEach(dropdown => {
+            const parent = dropdown.closest('.group');
+            if (parent && !parent.contains(e.target)) {
+                // Force hide dropdown when clicking outside
+                dropdown.style.opacity = '0';
+                dropdown.style.visibility = 'hidden';
+                dropdown.style.transform = 'translateY(-10px)';
+                
+                // Reset after a short delay to allow CSS hover to work again
+                setTimeout(() => {
+                    dropdown.style.opacity = '';
+                    dropdown.style.visibility = '';
+                    dropdown.style.transform = '';
+                }, 300);
+            }
+        });
+    });
+}
 
 /**
  * Mobile Menu Toggle - Enhanced for Touch Devices
