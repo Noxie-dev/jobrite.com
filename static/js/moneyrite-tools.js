@@ -228,49 +228,278 @@ class DebtCalculator {
 class ModalManager {
     constructor() {
         this.activeModal = null;
-        this.createModalContainer();
+        this.modalState = {
+            isOpen: false,
+            currentTool: null,
+            container: null,
+            hasError: false,
+            fallbackMode: false
+        };
+        this.initializeModal();
+    }
+
+    initializeModal() {
+        try {
+            this.createModalContainer();
+            this.validateInitialization();
+            console.log('✅ ModalManager initialized successfully');
+        } catch (error) {
+            if (window.MoneyRiteErrorHandler) {
+                window.MoneyRiteErrorHandler.logError('ModalManager Initialization', error);
+            } else {
+                console.error('ModalManager initialization failed:', error);
+            }
+            throw error;
+        }
+    }
+
+    validateInitialization() {
+        const container = document.getElementById('moneyrite-modal-container');
+        if (!container) {
+            throw new Error('Modal container creation failed');
+        }
+
+        const requiredElements = ['.modal-backdrop', '.modal-content', '.modal-title', '.modal-close', '.modal-body'];
+        const missing = requiredElements.filter(selector => !container.querySelector(selector));
+        
+        if (missing.length > 0) {
+            throw new Error(`Modal structure incomplete. Missing elements: ${missing.join(', ')}`);
+        }
+
+        this.modalState.container = container;
+        return true;
     }
 
     createModalContainer() {
-        if (document.getElementById('moneyrite-modal-container')) return;
+        if (document.getElementById('moneyrite-modal-container')) {
+            console.log('Modal container already exists');
+            return;
+        }
         
-        const container = document.createElement('div');
-        container.id = 'moneyrite-modal-container';
-        container.className = 'moneyrite-modal-container';
-        container.innerHTML = `
-            <div class="modal-backdrop" onclick="modalManager.closeModal()"></div>
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title"></h3>
-                    <button class="modal-close" onclick="modalManager.closeModal()">&times;</button>
+        try {
+            const container = document.createElement('div');
+            container.id = 'moneyrite-modal-container';
+            container.className = 'moneyrite-modal-container';
+            container.innerHTML = `
+                <div class="modal-backdrop" onclick="modalManager.closeModal()"></div>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title"></h3>
+                        <button class="modal-close" onclick="modalManager.closeModal()" aria-label="Close modal">&times;</button>
+                    </div>
+                    <div class="modal-body"></div>
                 </div>
-                <div class="modal-body"></div>
-            </div>
-        `;
-        document.body.appendChild(container);
+            `;
+            
+            // Add keyboard event listener for ESC key
+            container.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    this.closeModal();
+                }
+            });
+
+            document.body.appendChild(container);
+            console.log('Modal container created successfully');
+        } catch (error) {
+            throw new Error(`Failed to create modal container: ${error.message}`);
+        }
     }
 
     openModal(title, content, toolName) {
-        const container = document.getElementById('moneyrite-modal-container');
-        const titleEl = container.querySelector('.modal-title');
-        const bodyEl = container.querySelector('.modal-body');
+        const startTime = performance.now();
         
-        titleEl.textContent = title;
-        bodyEl.innerHTML = content;
-        
-        container.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-        this.activeModal = toolName;
-        
-        // Add privacy notice
-        this.addPrivacyNotice(bodyEl);
+        try {
+            // Validate inputs
+            if (!title || !content || !toolName) {
+                throw new Error('Missing required parameters: title, content, or toolName');
+            }
+
+            // Ensure modal is properly initialized
+            if (!this.modalState.container) {
+                this.validateInitialization();
+            }
+
+            const container = this.modalState.container;
+            const titleEl = container.querySelector('.modal-title');
+            const bodyEl = container.querySelector('.modal-body');
+            
+            if (!titleEl || !bodyEl) {
+                throw new Error('Modal elements not found');
+            }
+
+            // Clear previous content
+            bodyEl.innerHTML = '';
+            
+            // Set new content
+            titleEl.textContent = title;
+            bodyEl.innerHTML = content;
+            
+            // Update modal state
+            this.modalState.isOpen = true;
+            this.modalState.currentTool = toolName;
+            this.modalState.hasError = false;
+            this.modalState.fallbackMode = false;
+            this.activeModal = toolName;
+            
+            // Show modal with animation
+            container.style.display = 'flex';
+            container.setAttribute('aria-hidden', 'false');
+            
+            // Prevent background scrolling (mobile-friendly)
+            if (window.MobileAccessibilityManager) {
+                window.MobileAccessibilityManager.preventBackgroundScroll(true);
+            } else {
+                document.body.style.overflow = 'hidden';
+            }
+            
+            // Focus management for accessibility
+            setTimeout(() => {
+                const firstFocusable = container.querySelector('input, button, select, textarea, [tabindex]:not([tabindex="-1"])');
+                if (firstFocusable) {
+                    firstFocusable.focus();
+                }
+            }, 100);
+            
+            // Add privacy notice (only for non-error modals)
+            if (!toolName.includes('error')) {
+                this.addPrivacyNotice(bodyEl);
+            }
+
+            const executionTime = performance.now() - startTime;
+            console.log(`✅ Modal opened: ${toolName} (${executionTime.toFixed(2)}ms)`);
+            
+            return true;
+        } catch (error) {
+            const executionTime = performance.now() - startTime;
+            
+            if (window.MoneyRiteErrorHandler) {
+                window.MoneyRiteErrorHandler.logError('Modal Open Error', error, {
+                    toolName,
+                    title,
+                    executionTime: executionTime.toFixed(2)
+                });
+            }
+
+            // Try fallback modal
+            return this.handleModalError(error, toolName);
+        }
     }
 
     closeModal() {
-        const container = document.getElementById('moneyrite-modal-container');
-        container.style.display = 'none';
-        document.body.style.overflow = 'auto';
-        this.activeModal = null;
+        try {
+            const container = this.modalState.container || document.getElementById('moneyrite-modal-container');
+            
+            if (container) {
+                container.style.display = 'none';
+                container.setAttribute('aria-hidden', 'true');
+            }
+            
+            // Restore background scrolling (mobile-friendly)
+            if (window.MobileAccessibilityManager) {
+                window.MobileAccessibilityManager.preventBackgroundScroll(false);
+            } else {
+                document.body.style.overflow = 'auto';
+            }
+            
+            // Reset modal state
+            this.modalState.isOpen = false;
+            this.modalState.currentTool = null;
+            this.modalState.hasError = false;
+            this.modalState.fallbackMode = false;
+            this.activeModal = null;
+            
+            console.log('Modal closed successfully');
+            return true;
+        } catch (error) {
+            if (window.MoneyRiteErrorHandler) {
+                window.MoneyRiteErrorHandler.logError('Modal Close Error', error);
+            }
+            
+            // Force close as fallback
+            try {
+                const container = document.getElementById('moneyrite-modal-container');
+                if (container) {
+                    container.style.display = 'none';
+                }
+                document.body.style.overflow = 'auto';
+            } catch (fallbackError) {
+                console.error('Critical modal close error:', fallbackError);
+            }
+            
+            return false;
+        }
+    }
+
+    handleModalError(error, toolName) {
+        try {
+            this.modalState.hasError = true;
+            this.modalState.fallbackMode = true;
+            
+            const fallbackContent = this.createFallbackContent(toolName, error);
+            
+            // Try to show fallback modal
+            const container = this.modalState.container || document.getElementById('moneyrite-modal-container');
+            if (container) {
+                const titleEl = container.querySelector('.modal-title');
+                const bodyEl = container.querySelector('.modal-body');
+                
+                if (titleEl && bodyEl) {
+                    titleEl.textContent = `${toolName} - Error`;
+                    bodyEl.innerHTML = fallbackContent;
+                    
+                    container.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                    
+                    this.modalState.isOpen = true;
+                    this.modalState.currentTool = `${toolName}-error`;
+                    
+                    return true;
+                }
+            }
+            
+            // If modal system completely fails, show alert
+            alert(`Sorry, the ${toolName} is temporarily unavailable. Please refresh the page and try again.`);
+            return false;
+            
+        } catch (fallbackError) {
+            console.error('Critical modal error handling failure:', fallbackError);
+            alert(`Sorry, there was an error opening the ${toolName}. Please refresh the page.`);
+            return false;
+        }
+    }
+
+    createFallbackContent(toolName, error) {
+        return `
+            <div class="fallback-modal" style="text-align: center; padding: 2rem;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">⚠️</div>
+                <h3 style="color: #dc2626; margin-bottom: 1rem;">Financial Tool Temporarily Unavailable</h3>
+                <p style="color: #6b7280; margin-bottom: 1rem;">
+                    We're experiencing technical difficulties with the ${toolName}.
+                </p>
+                <p style="color: #6b7280; margin-bottom: 2rem;">
+                    Please try refreshing the page or contact support if the issue persists.
+                </p>
+                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <button onclick="location.reload()" 
+                            style="background: #3b82f6; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 0.5rem; cursor: pointer; min-width: 120px;">
+                        Refresh Page
+                    </button>
+                    <button onclick="modalManager.closeModal()" 
+                            style="background: #6b7280; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 0.5rem; cursor: pointer; min-width: 120px;">
+                        Close
+                    </button>
+                </div>
+                <details style="margin-top: 2rem; text-align: left; max-width: 500px; margin-left: auto; margin-right: auto;">
+                    <summary style="cursor: pointer; color: #6b7280; padding: 0.5rem;">Technical Details (for developers)</summary>
+                    <pre style="background: #f3f4f6; padding: 1rem; border-radius: 0.5rem; margin-top: 0.5rem; font-size: 0.8rem; overflow: auto; white-space: pre-wrap;">
+Error: ${error.message}
+Context: ${toolName}
+Time: ${new Date().toLocaleString()}
+User Agent: ${navigator.userAgent}
+                    </pre>
+                </details>
+            </div>
+        `;
     }
 
     addPrivacyNotice(container) {

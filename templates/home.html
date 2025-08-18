@@ -95,7 +95,13 @@
         <!-- Tools Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <!-- Salary Calculator Card -->
-            <div class="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 cursor-pointer transform hover:-translate-y-2" onclick="openSalaryCalculator()">
+            <div class="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 cursor-pointer transform hover:-translate-y-2" 
+                 onclick="safeCardClick('Salary Calculator', openSalaryCalculator)(event)"
+                 onkeydown="if(event.key==='Enter'||event.key===' '){safeCardClick('Salary Calculator', openSalaryCalculator)(event)}"
+                 tabindex="0" 
+                 role="button" 
+                 aria-label="Open Salary Calculator tool"
+                 data-tool="salary-calculator">
                 <div class="p-8">
                     <!-- Icon -->
                     <div class="w-16 h-16 bg-gradient-to-br from-green-400 to-emerald-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
@@ -136,7 +142,13 @@
             </div>
 
             <!-- Budget Planner Card -->
-            <div class="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 cursor-pointer transform hover:-translate-y-2" onclick="openBudgetPlanner()">
+            <div class="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 cursor-pointer transform hover:-translate-y-2" 
+                 onclick="safeCardClick('Budget Planner', openBudgetPlanner)(event)"
+                 onkeydown="if(event.key==='Enter'||event.key===' '){safeCardClick('Budget Planner', openBudgetPlanner)(event)}"
+                 tabindex="0" 
+                 role="button" 
+                 aria-label="Open Budget Planner tool"
+                 data-tool="budget-planner">
                 <div class="p-8">
                     <!-- Icon -->
                     <div class="w-16 h-16 bg-gradient-to-br from-blue-400 to-indigo-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
@@ -177,7 +189,13 @@
             </div>
 
             <!-- Debt Tracker Card -->
-            <div class="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 cursor-pointer transform hover:-translate-y-2" onclick="openDebtTracker()">
+            <div class="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 cursor-pointer transform hover:-translate-y-2" 
+                 onclick="safeCardClick('Debt Tracker', openDebtTracker)(event)"
+                 onkeydown="if(event.key==='Enter'||event.key===' '){safeCardClick('Debt Tracker', openDebtTracker)(event)}"
+                 tabindex="0" 
+                 role="button" 
+                 aria-label="Open Debt Tracker tool"
+                 data-tool="debt-tracker">
                 <div class="p-8">
                     <!-- Icon -->
                     <div class="w-16 h-16 bg-gradient-to-br from-purple-400 to-pink-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
@@ -218,7 +236,13 @@
             </div>
 
             <!-- Credit Education Card -->
-            <div class="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 cursor-pointer transform hover:-translate-y-2" onclick="openCreditMonitor()">
+            <div class="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 cursor-pointer transform hover:-translate-y-2" 
+                 onclick="safeCardClick('Credit Education', openCreditMonitor)(event)"
+                 onkeydown="if(event.key==='Enter'||event.key===' '){safeCardClick('Credit Education', openCreditMonitor)(event)}"
+                 tabindex="0" 
+                 role="button" 
+                 aria-label="Open Credit Education tool"
+                 data-tool="credit-education">
                 <div class="p-8">
                     <!-- Icon -->
                     <div class="w-16 h-16 bg-gradient-to-br from-orange-400 to-red-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
@@ -419,8 +443,15 @@
 {% endblock %}
 
 {% block extra_js %}
+<script src="{% static 'js/moneyrite-error-handler.js' %}"></script>
 <script src="{% static 'js/moneyrite-tools.js' %}"></script>
 <script src="{% static 'js/moneyrite-functions.js' %}"></script>
+<script src="{% static 'js/moneyrite-accessibility.js' %}"></script>
+<script src="{% static 'js/moneyrite-testing.js' %}"></script>
+<script src="{% static 'js/moneyrite-integration.js' %}"></script>
+<script src="{% static 'js/moneyrite-mobile-accessibility.js' %}"></script>
+<script src="{% static 'js/moneyrite-testing-debug.js' %}"></script>
+<script src="{% static 'js/moneyrite-testing.js' %}"></script>
 <script>
 /* Enhanced Hero Section JavaScript with Advanced Particle System */
 (function() {

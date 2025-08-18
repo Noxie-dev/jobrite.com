@@ -1,5 +1,12 @@
 // MoneyRite Tools Functions
 function openSalaryCalculator() {
+    const startTime = performance.now();
+    
+    try {
+        // Validate dependencies
+        if (!window.MoneyRiteTools || !window.MoneyRiteTools.modalManager) {
+            throw new Error('MoneyRite tools not properly initialized');
+        }
     const content = `
         <form class="tool-form" id="salary-calculator-form">
             <div class="form-group">
@@ -68,8 +75,23 @@ function openSalaryCalculator() {
         calculateSalary();
     });
     
-    // Load saved data
-    loadSalaryData();
+        // Load saved data
+        loadSalaryData();
+        
+        const executionTime = performance.now() - startTime;
+        console.log(`✅ Salary Calculator opened successfully in ${executionTime.toFixed(2)}ms`);
+        
+    } catch (error) {
+        const executionTime = performance.now() - startTime;
+        
+        if (window.MoneyRiteErrorHandler) {
+            window.MoneyRiteErrorHandler.logError('Salary Calculator Open', error, {
+                executionTime: executionTime.toFixed(2)
+            });
+        }
+        
+        throw error; // Re-throw to be handled by safeCardClick
+    }
 }
 
 function calculateSalary() {
@@ -171,7 +193,15 @@ function clearSalaryData() {
 }
 
 function openBudgetPlanner() {
-    const content = `
+    const startTime = performance.now();
+    
+    try {
+        // Validate dependencies
+        if (!window.MoneyRiteTools || !window.MoneyRiteTools.modalManager) {
+            throw new Error('MoneyRite tools not properly initialized');
+        }
+        
+        const content = `
         <form class="tool-form" id="budget-planner-form">
             <div class="form-group">
                 <label class="form-label">Monthly Income (ZAR)</label>
@@ -264,8 +294,23 @@ function openBudgetPlanner() {
         document.getElementById('monthly-income').addEventListener('input', calculateBudget);
     }, 100);
     
-    // Load saved data
-    loadBudgetData();
+        // Load saved data
+        loadBudgetData();
+        
+        const executionTime = performance.now() - startTime;
+        console.log(`✅ Budget Planner opened successfully in ${executionTime.toFixed(2)}ms`);
+        
+    } catch (error) {
+        const executionTime = performance.now() - startTime;
+        
+        if (window.MoneyRiteErrorHandler) {
+            window.MoneyRiteErrorHandler.logError('Budget Planner Open', error, {
+                executionTime: executionTime.toFixed(2)
+            });
+        }
+        
+        throw error; // Re-throw to be handled by safeCardClick
+    }
 }
 
 function calculateBudget() {
@@ -356,7 +401,15 @@ function clearBudgetData() {
 }
 
 function openDebtTracker() {
-    const content = `
+    const startTime = performance.now();
+    
+    try {
+        // Validate dependencies
+        if (!window.MoneyRiteTools || !window.MoneyRiteTools.modalManager) {
+            throw new Error('MoneyRite tools not properly initialized');
+        }
+        
+        const content = `
         <div class="tool-form">
             <h4 style="margin: 0 0 1rem; color: var(--text-primary); font-weight: 600;">Add Debt Account</h4>
             
@@ -392,8 +445,23 @@ function openDebtTracker() {
         </div>
     `;
     
-    window.MoneyRiteTools.modalManager.openModal('Debt Tracker', content, 'debt');
-    loadDebtData();
+        window.MoneyRiteTools.modalManager.openModal('Debt Tracker', content, 'debt');
+        loadDebtData();
+        
+        const executionTime = performance.now() - startTime;
+        console.log(`✅ Debt Tracker opened successfully in ${executionTime.toFixed(2)}ms`);
+        
+    } catch (error) {
+        const executionTime = performance.now() - startTime;
+        
+        if (window.MoneyRiteErrorHandler) {
+            window.MoneyRiteErrorHandler.logError('Debt Tracker Open', error, {
+                executionTime: executionTime.toFixed(2)
+            });
+        }
+        
+        throw error; // Re-throw to be handled by safeCardClick
+    }
 }
 
 function addDebt() {
@@ -510,7 +578,15 @@ function clearDebtData() {
 }
 
 function openCreditMonitor() {
-    const content = `
+    const startTime = performance.now();
+    
+    try {
+        // Validate dependencies
+        if (!window.MoneyRiteTools || !window.MoneyRiteTools.modalManager) {
+            throw new Error('MoneyRite tools not properly initialized');
+        }
+        
+        const content = `
         <div class="tool-form">
             <div style="background: linear-gradient(135deg, #f0f9ff, #e0f2fe); border-radius: 1rem; padding: 2rem; margin-bottom: 2rem; border: 1px solid #bae6fd;">
                 <h4 style="margin: 0 0 1rem; color: #0369a1; font-weight: 600;">🎓 Credit Education Center</h4>
@@ -580,8 +656,23 @@ function openCreditMonitor() {
         </div>
     `;
     
-    window.MoneyRiteTools.modalManager.openModal('Credit Education', content, 'credit');
-    loadCreditData();
+        window.MoneyRiteTools.modalManager.openModal('Credit Education', content, 'credit');
+        loadCreditData();
+        
+        const executionTime = performance.now() - startTime;
+        console.log(`✅ Credit Education opened successfully in ${executionTime.toFixed(2)}ms`);
+        
+    } catch (error) {
+        const executionTime = performance.now() - startTime;
+        
+        if (window.MoneyRiteErrorHandler) {
+            window.MoneyRiteErrorHandler.logError('Credit Education Open', error, {
+                executionTime: executionTime.toFixed(2)
+            });
+        }
+        
+        throw error; // Re-throw to be handled by safeCardClick
+    }
 }
 
 function calculateDebtToIncome() {

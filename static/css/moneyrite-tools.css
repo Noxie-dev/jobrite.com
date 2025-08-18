@@ -488,6 +488,98 @@
     left: 100%;
 }
 
+/* Touch and Accessibility Enhancements */
+.touch-enabled {
+    -webkit-tap-highlight-color: rgba(254, 127, 45, 0.2);
+    tap-highlight-color: rgba(254, 127, 45, 0.2);
+}
+
+.touch-enabled.touch-pressed {
+    transform: translateY(-4px) scale(0.98);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    transition: all 0.1s ease;
+}
+
+/* Focus styles for accessibility */
+[role="button"]:focus,
+.tool-card:focus {
+    outline: 3px solid var(--accent-color);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 3px rgba(254, 127, 45, 0.3);
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .tool-card {
+        border: 2px solid #000;
+    }
+    
+    .tool-card:hover {
+        border-color: var(--accent-color);
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .tool-card,
+    .touch-enabled,
+    .modal-content {
+        transition: none;
+        animation: none;
+    }
+    
+    .tool-card:hover {
+        transform: none;
+    }
+}
+
+/* Mobile-specific improvements */
+@media (max-width: 768px) {
+    .tool-card {
+        min-height: 44px; /* Minimum touch target size */
+        padding: 1.5rem;
+    }
+    
+    .modal-content {
+        margin: 1rem;
+        max-height: calc(100vh - 2rem);
+        border-radius: 1rem;
+    }
+    
+    .modal-header {
+        padding: 1.5rem 1.5rem 1rem;
+    }
+    
+    .modal-body {
+        padding: 0 1.5rem 1.5rem;
+        max-height: calc(90vh - 8rem);
+        overflow-y: auto;
+    }
+    
+    /* Larger touch targets for mobile */
+    .form-input,
+    .form-select,
+    .btn-primary,
+    .btn-secondary {
+        min-height: 44px;
+        font-size: 16px; /* Prevents zoom on iOS */
+    }
+    
+    .modal-close {
+        min-width: 44px;
+        min-height: 44px;
+        font-size: 1.5rem;
+    }
+}
+
+/* Tablet-specific adjustments */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .modal-content {
+        max-width: 85vw;
+        margin: 2rem auto;
+    }
+}
+
 /* Responsive Design */
 @media (max-width: 1024px) {
     .moneyrite-tools-grid {
@@ -557,5 +649,494 @@
     
     .tool-description {
         font-size: 0.9rem;
+    }
+}/* 
+Mobile and Accessibility Enhancements */
+
+/* Touch-friendly card interactions */
+.moneyrite-card[role="button"] {
+    min-height: 44px; /* Minimum touch target size */
+    position: relative;
+    outline: none;
+}
+
+/* Focus styles for accessibility */
+.moneyrite-card[role="button"]:focus {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(254, 127, 45, 0.2);
+}
+
+/* Touch feedback */
+.moneyrite-card[role="button"]:active {
+    transform: translateY(-4px) scale(0.98);
+    transition: transform 0.1s ease;
+}
+
+/* Mobile-specific modal improvements */
+@media (max-width: 768px) {
+    .moneyrite-modal-container {
+        padding: 1rem;
+        align-items: flex-start;
+        padding-top: 2rem;
+    }
+    
+    .modal-content {
+        width: 100%;
+        max-width: none;
+        margin: 0;
+        border-radius: 1rem 1rem 0 0;
+        max-height: calc(100vh - 2rem);
+        position: relative;
+    }
+    
+    .modal-body {
+        max-height: calc(100vh - 8rem);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Prevent background scrolling on mobile */
+    body.modal-open {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+    
+    /* Larger touch targets for mobile */
+    .form-input, .form-select, .btn-primary, .btn-secondary {
+        min-height: 44px;
+        font-size: 16px; /* Prevent zoom on iOS */
+    }
+    
+    /* Better spacing for mobile forms */
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .action-buttons {
+        position: sticky;
+        bottom: 0;
+        background: white;
+        padding: 1rem 0;
+        margin-top: 2rem;
+        border-top: 1px solid #e5e7eb;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .moneyrite-card {
+        border: 2px solid currentColor;
+    }
+    
+    .moneyrite-card:focus {
+        outline: 3px solid currentColor;
+        outline-offset: 2px;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .moneyrite-card {
+        transition: none;
+    }
+    
+    .modal-content {
+        animation: none;
+    }
+    
+    .moneyrite-card:hover {
+        transform: none;
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .moneyrite-modal-container {
+        background: rgba(0, 0, 0, 0.9);
+    }
+    
+    .modal-content {
+        background: #1f2937;
+        color: #f9fafb;
+        border: 1px solid #374151;
+    }
+    
+    .form-input, .form-select {
+        background: #374151;
+        border-color: #4b5563;
+        color: #f9fafb;
+    }
+    
+    .form-input:focus, .form-select:focus {
+        border-color: var(--accent-color);
+        background: #4b5563;
+    }
+}
+
+/* Keyboard navigation improvements */
+.moneyrite-card[role="button"]:focus-visible {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(254, 127, 45, 0.2);
+}
+
+/* Skip to content for screen readers */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Loading states */
+.moneyrite-card.loading {
+    pointer-events: none;
+    opacity: 0.7;
+    position: relative;
+}
+
+.moneyrite-card.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid var(--accent-color);
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Error states */
+.moneyrite-card.error {
+    border-color: #ef4444;
+    background: #fef2f2;
+}
+
+.moneyrite-card.error .card-icon {
+    color: #ef4444;
+}
+
+/* Success states */
+.moneyrite-card.success {
+    border-color: #10b981;
+    background: #f0fdf4;
+}
+
+.moneyrite-card.success .card-icon {
+    color: #10b981;
+}
+
+/* Improved modal animations for mobile */
+@media (max-width: 768px) {
+    @keyframes modalSlideIn {
+        from {
+            opacity: 0;
+            transform: translateY(100px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .modal-content {
+        animation: modalSlideIn 0.3s ease-out;
+    }
+}
+
+/* Landscape orientation adjustments */
+@media (max-width: 768px) and (orientation: landscape) {
+    .modal-content {
+        max-height: calc(100vh - 1rem);
+        border-radius: 0.5rem;
+    }
+    
+    .modal-body {
+        max-height: calc(100vh - 6rem);
+    }
+}
+
+/* Print styles */
+@media print {
+    .moneyrite-modal-container {
+        display: none !important;
+    }
+    
+    .moneyrite-card {
+        break-inside: avoid;
+        border: 1px solid #000;
+    }
+}/* En
+hanced Responsive Modal Handling */
+
+/* Mobile-first modal adjustments */
+@media (max-width: 768px) {
+    .moneyrite-modal-container {
+        padding: 0.5rem;
+        align-items: flex-start;
+        padding-top: 2rem;
+    }
+    
+    .modal-content {
+        width: 100%;
+        max-width: none;
+        margin: 0;
+        border-radius: 1rem 1rem 0 0;
+        max-height: calc(100vh - 2rem);
+        position: relative;
+        animation: slideUpMobile 0.3s ease-out;
+    }
+    
+    .modal-header {
+        padding: 1rem 1.5rem;
+        position: sticky;
+        top: 0;
+        background: white;
+        z-index: 10;
+        border-bottom: 1px solid #e5e7eb;
+    }
+    
+    .modal-body {
+        padding: 1rem 1.5rem 2rem;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .modal-close {
+        width: 2.5rem;
+        height: 2.5rem;
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    /* Form adjustments for mobile */
+    .tool-form {
+        gap: 1rem;
+    }
+    
+    .form-input, .form-select {
+        padding: 0.875rem;
+        font-size: 1rem;
+        border-radius: 0.5rem;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+        gap: 0.75rem;
+        margin-top: 1.5rem;
+    }
+    
+    .btn-primary, .btn-secondary {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        font-size: 1rem;
+        min-height: 44px;
+    }
+    
+    .results-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+    
+    .result-item {
+        padding: 1rem;
+    }
+}
+
+/* Tablet adjustments */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .modal-content {
+        max-width: 90%;
+        margin: 2rem auto;
+    }
+    
+    .results-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Large screen optimizations */
+@media (min-width: 1025px) {
+    .modal-content {
+        max-width: 800px;
+    }
+    
+    .results-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Landscape mobile adjustments */
+@media (max-width: 768px) and (orientation: landscape) {
+    .moneyrite-modal-container {
+        padding-top: 1rem;
+    }
+    
+    .modal-content {
+        max-height: calc(100vh - 1rem);
+        border-radius: 1rem;
+    }
+    
+    .modal-header {
+        padding: 0.75rem 1.5rem;
+    }
+    
+    .modal-body {
+        padding: 0.75rem 1.5rem 1.5rem;
+    }
+}
+
+/* Touch device optimizations */
+.touch-device .modal-close {
+    min-width: 44px;
+    min-height: 44px;
+}
+
+.touch-device .form-input,
+.touch-device .form-select {
+    min-height: 44px;
+}
+
+.touch-device .btn-primary,
+.touch-device .btn-secondary {
+    min-height: 44px;
+    padding: 0.75rem 1.5rem;
+}
+
+/* High DPI display adjustments */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .modal-content {
+        border: 0.5px solid rgba(0, 0, 0, 0.1);
+    }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    .modal-content {
+        animation: none;
+    }
+    
+    .moneyrite-card {
+        transition: none;
+    }
+    
+    .moneyrite-card:hover {
+        transform: none;
+    }
+}
+
+/* Dark mode support (if enabled) */
+@media (prefers-color-scheme: dark) {
+    .modal-content {
+        background: #1f2937;
+        color: #f9fafb;
+    }
+    
+    .modal-header {
+        border-bottom-color: #374151;
+    }
+    
+    .form-input, .form-select {
+        background: #374151;
+        border-color: #4b5563;
+        color: #f9fafb;
+    }
+    
+    .form-input:focus, .form-select:focus {
+        border-color: #3b82f6;
+    }
+}
+
+/* Animation keyframes for mobile */
+@keyframes slideUpMobile {
+    from {
+        opacity: 0;
+        transform: translateY(100px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Focus management for accessibility */
+.modal-content:focus-within {
+    outline: none;
+}
+
+.modal-content .form-input:focus,
+.modal-content .form-select:focus,
+.modal-content .btn-primary:focus,
+.modal-content .btn-secondary:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+/* Loading states for slow connections */
+.modal-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+}
+
+.modal-loading::after {
+    content: '';
+    width: 2rem;
+    height: 2rem;
+    border: 2px solid #e5e7eb;
+    border-top: 2px solid #3b82f6;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Error state styling */
+.modal-error {
+    text-align: center;
+    padding: 2rem;
+    color: #dc2626;
+}
+
+.modal-error .error-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+/* Success state styling */
+.modal-success {
+    border-left: 4px solid #10b981;
+    background: #f0fdf4;
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: 0.5rem;
+}
+
+/* Print styles */
+@media print {
+    .moneyrite-modal-container {
+        display: none !important;
     }
 }
